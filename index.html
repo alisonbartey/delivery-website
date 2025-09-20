@@ -101,7 +101,25 @@
 
     #tracking-result {
       margin-top: 20px;
-      font-weight: bold;
+      text-align: left;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .history-card {
+      background: white;
+      border-left: 5px solid #ff6600;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .history-time {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -172,30 +190,44 @@
   </footer>
 
   <script>
-function trackDelivery(event) {
-  event.preventDefault();
-  const trackingId = document.getElementById('tracking-id').value.trim();
-  const resultDiv = document.getElementById('tracking-result');
+    function trackDelivery(event) {
+      event.preventDefault();
+      const trackingId = document.getElementById('tracking-id').value.trim();
+      const resultDiv = document.getElementById('tracking-result');
 
-  // Load data from localStorage
-  const data = JSON.parse(localStorage.getItem("trackingData")) || {};
+      // Clear old results
+      resultDiv.innerHTML = "";
 
-  if (trackingId in data) {
-    const history = data[trackingId];
+      // Load tracking data
+      const data = JSON.parse(localStorage.getItem("trackingData")) || {};
 
-    // Generate timeline text
-    let output = "";
-    history.forEach(update => {
-      output += `📍 ${update.status} (${update.time})\n`;
-    });
+      if (trackingId in data) {
+        const history = data[trackingId];
 
-    resultDiv.textContent = output;
-    resultDiv.style.color = "green";
-  } else {
-    resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
-    resultDiv.style.color = "red";
-  }
-}
+        // Sort events (oldest first)
+        history.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+        history.forEach(update => {
+          const card = document.createElement("div");
+          card.classList.add("history-card");
+
+          const status = document.createElement("div");
+          status.textContent = `📍 ${update.status}`;
+
+          const time = document.createElement("div");
+          time.classList.add("history-time");
+          time.textContent = new Date(update.time).toLocaleString();
+
+          card.appendChild(status);
+          card.appendChild(time);
+          resultDiv.appendChild(card);
+        });
+
+      } else {
+        resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
+        resultDiv.style.color = "red";
+      }
+    }
   </script>
 
 </body>
