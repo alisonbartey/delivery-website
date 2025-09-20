@@ -8,7 +8,6 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #fafafa;
     }
 
     header {
@@ -65,7 +64,6 @@
       padding: 20px;
       width: 250px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      background: white;
     }
 
     footer {
@@ -102,33 +100,32 @@
     }
 
     #tracking-result {
-      margin-top: 30px;
-      text-align: left;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-top: 20px;
     }
 
     /* Timeline styles */
     .timeline-container {
       position: relative;
-      margin-left: 20px;
+      margin-left: 30px;
       padding-left: 20px;
+      border-left: 2px solid #ddd;
+      overflow: hidden;
     }
 
-    .timeline-container::before {
-      content: "";
+    .progress-line {
       position: absolute;
+      left: -2px;
       top: 0;
-      left: 5px;
       width: 2px;
-      background-color: #ff6600;
       height: 0;
-      transition: height 1s ease;
+      background-color: #ff6600;
+      animation: fillLine 1s ease forwards;
+      z-index: 1;
     }
 
-    .timeline-container.filled::before {
-      height: 100%;
+    @keyframes fillLine {
+      from { height: 0; }
+      to { height: 100%; }
     }
 
     .timeline-item {
@@ -141,60 +138,31 @@
     }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     .timeline-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       position: absolute;
-      left: -27px;
-      top: 6px;
-      animation: bounce 0.6s ease;
+      left: -28px;
+      top: 5px;
       z-index: 2;
+      animation: bounce 0.4s ease;
     }
 
     @keyframes bounce {
-      0% { transform: scale(0.5); opacity: 0; }
-      60% { transform: scale(1.2); opacity: 1; }
+      0% { transform: scale(0.5); }
+      50% { transform: scale(1.2); }
       100% { transform: scale(1); }
     }
 
-    /* Dot colors */
-    .timeline-dot.in-transit { background-color: #ff9900; }
-    .timeline-dot.delivered { background-color: #28a745; }
-    .timeline-dot.hold { background-color: #dc3545; }
-    .timeline-dot.pending { background-color: #007bff; }
-
     /* Status colors */
-    .status-in-transit { color: #ff9900; }
-    .status-delivered { color: #28a745; }
-    .status-hold { color: #dc3545; }
-    .status-pending { color: #007bff; }
-
-    /* Latest item highlight */
-    .timeline-item.latest {
-      border-left: 3px solid #ff6600;
-      background-color: #fff8f3;
-      padding: 10px 15px;
-      border-radius: 8px;
-    }
-    .timeline-item.latest .timeline-status {
-      font-weight: bold;
-      font-size: 1.1em;
-      color: #ff6600;
-    }
-    .timeline-item.latest .timeline-dot {
-      transform: scale(1.2);
-    }
-
-    .progress-info {
-      font-weight: bold;
-      margin-bottom: 15px;
-      text-align: center;
-    }
+    .delivered { background-color: #28a745; }
+    .in-transit { background-color: #ff9800; }
+    .on-hold { background-color: #f44336; }
+    .arrived { background-color: #007bff; }
   </style>
 </head>
 <body>
@@ -250,87 +218,70 @@
       event.preventDefault();
       const trackingId = document.getElementById('tracking-id').value.trim();
       const resultDiv = document.getElementById('tracking-result');
-      resultDiv.innerHTML = "";
+      resultDiv.innerHTML = ""; // clear old result
 
-      // Fake data simulation
-      const fakeHistory = {
-        "SP597396926": [
-          { status: "📋 Arrived at Regional Origin Facility", location: "MANCHESTER, UK", time: "2025-09-19T17:23:00" },
-          { status: "📦 In Transit to Next Location", location: "SpeedyDelivery Warehouse UK", time: "2025-09-18T14:10:00" },
-          { status: "📦 Package On Hold", location: "Customs Warehouse UK", time: "2025-09-17T12:45:00" },
-          { status: "✅ Package Delivered", location: "Lagos, Nigeria", time: "2025-09-16T09:15:00" }
-        ]
-      };
+      const data = JSON.parse(localStorage.getItem("trackingData")) || {};
 
-      if (trackingId in fakeHistory) {
-        const history = fakeHistory[trackingId];
-        
-        // Progress info
-        const progress = document.createElement("div");
-        progress.classList.add("progress-info");
-        progress.textContent = `${history.length} updates found — Latest status below`;
-        resultDiv.appendChild(progress);
-
-        const container = document.createElement("div");
-        container.classList.add("timeline-container");
-
-        history.forEach((update, index) => {
-          const item = document.createElement("div");
-          item.classList.add("timeline-item");
-          if (index === 0) item.classList.add("latest"); // highlight latest
-          item.style.animationDelay = `${index * 0.2}s`;
-
-          const dot = document.createElement("div");
-          dot.classList.add("timeline-dot");
-
-          const lower = update.status.toLowerCase();
-          if (lower.includes("delivered")) {
-            dot.classList.add("delivered");
-          } else if (lower.includes("transit") || lower.includes("out for delivery")) {
-            dot.classList.add("in-transit");
-          } else if (lower.includes("hold")) {
-            dot.classList.add("hold");
-          } else {
-            dot.classList.add("pending");
-          }
-
-          const status = document.createElement("div");
-          status.classList.add("timeline-status");
-          status.textContent = update.status;
-          if (lower.includes("delivered")) {
-            status.classList.add("status-delivered");
-          } else if (lower.includes("transit") || lower.includes("out for delivery")) {
-            status.classList.add("status-in-transit");
-          } else if (lower.includes("hold")) {
-            status.classList.add("status-hold");
-          } else {
-            status.classList.add("status-pending");
-          }
-
-          const loc = document.createElement("div");
-          loc.textContent = `📌 ${update.location}`;
-
-          const time = document.createElement("div");
-          time.style.fontSize = "0.85em";
-          time.style.color = "#555";
-          time.textContent = new Date(update.time).toLocaleString();
-
-          item.appendChild(dot);
-          item.appendChild(status);
-          item.appendChild(loc);
-          item.appendChild(time);
-          container.appendChild(item);
-        });
-
-        resultDiv.appendChild(container);
-
-        // Animate vertical line fill
-        setTimeout(() => container.classList.add("filled"), 100);
-
+      if (trackingId in data) {
+        renderTimeline(data[trackingId], resultDiv);
       } else {
         resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
         resultDiv.style.color = "red";
       }
+    }
+
+    function renderTimeline(history, container) {
+      const timeline = document.createElement("div");
+      timeline.classList.add("timeline-container");
+
+      // Progress line
+      const progressLine = document.createElement("div");
+      progressLine.classList.add("progress-line");
+      timeline.appendChild(progressLine);
+
+      // Loop through history
+      history.forEach(update => {
+        const item = document.createElement("div");
+        item.classList.add("timeline-item");
+
+        // Dot
+        const dot = document.createElement("div");
+        dot.classList.add("timeline-dot");
+
+        // Color coding
+        if (update.status.toLowerCase().includes("delivered")) dot.classList.add("delivered");
+        else if (update.status.toLowerCase().includes("transit")) dot.classList.add("in-transit");
+        else if (update.status.toLowerCase().includes("hold")) dot.classList.add("on-hold");
+        else dot.classList.add("arrived");
+
+        item.appendChild(dot);
+
+        // Status text
+        const status = document.createElement("div");
+        status.textContent = update.status;
+        status.style.fontWeight = "bold";
+        item.appendChild(status);
+
+        // Location
+        if (update.location) {
+          const loc = document.createElement("div");
+          loc.style.color = "#0077cc";
+          loc.style.fontSize = "0.9em";
+          loc.textContent = `📌 ${update.location}`;
+          item.appendChild(loc);
+        }
+
+        // Time
+        const time = document.createElement("div");
+        time.style.fontSize = "0.8em";
+        time.style.color = "#666";
+        time.textContent = new Date(update.time).toLocaleString();
+        item.appendChild(time);
+
+        timeline.appendChild(item);
+      });
+
+      container.appendChild(timeline);
     }
   </script>
 
