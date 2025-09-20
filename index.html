@@ -212,7 +212,15 @@
           card.classList.add("history-card");
 
           const status = document.createElement("div");
-          status.textContent = `📍 ${update.status}`;
+status.textContent = `📍 ${update.status}`;
+
+if (update.location) {
+  const loc = document.createElement("div");
+  loc.style.color = "#0077cc";
+  loc.style.fontSize = "0.9em";
+  loc.textContent = `📌 Last Known Location: ${update.location}`;
+  card.appendChild(loc);
+}
 
           const time = document.createElement("div");
           time.classList.add("history-time");
