@@ -5,35 +5,209 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>SpeedyDelivery</title>
 <style>
-  body { margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
-  header { background-color: #ff6600; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-  nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; cursor: pointer; }
-  .hero { background-image: url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=1500&q=80'); background-size: cover; background-position: center; height: 400px; display: flex; justify-content: center; align-items: center; color: white; text-shadow: 2px 2px 5px #000; }
-  .hero h1 { font-size: 48px; }
-  .section { padding: 40px 20px; text-align: center; }
-  .cards { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
-  .card { border: 1px solid #ccc; border-radius: 10px; padding: 20px; width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-  footer { background-color: #222; color: #aaa; text-align: center; padding: 20px; }
-  #tracking-section { background-color: #f9f9f9; padding: 40px 20px; }
-  form { margin-top: 20px; }
-  input[type="text"] { padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px; }
-  button { padding: 10px 20px; background-color: #ff6600; color: white; border: none; border-radius: 5px; margin-left: 10px; cursor: pointer; }
-  #tracking-result { margin-top: 20px; font-weight: bold; }
-  /* Timeline */
-  .timeline { position: relative; max-width: 500px; margin: 30px auto; }
-  .timeline::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 4px; background: #ccc; }
-  .timeline-item { position: relative; padding-left: 50px; margin-bottom: 20px; }
-  .dot { position: absolute; left: 12px; width: 16px; height: 16px; border-radius: 50%; background: #ff9900; top: 0; }
-  .dot.latest { background: green; }
-  .pulse { position: absolute; left: 4px; top: -4px; width: 24px; height: 24px; border-radius: 50%; background: rgba(0,128,0,0.3); animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0% { transform: scale(0.7); opacity: 0.7; } 50% { transform: scale(1.4); opacity: 0; } 100% { transform: scale(0.7); opacity: 0.7; } }
-  .status-text { display: inline-block; }
-  .status-text.latest { font-weight: bold; background-color: #fff4e0; padding: 3px 6px; border-radius: 3px; }
-  .status-text.faded { color: #aaa; }
-  .time { font-size: 0.9em; color: gray; display:block; }
-  .location { font-size: 0.9em; color: #0077cc; display:block; }
-  .fold-btn { cursor:pointer; color:#0077cc; font-size:0.9em; margin-top:5px; display:block; }
+  /* GENERAL STYLES */
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+  }
+
+  header {
+    background-color: #ff6600;
+    padding: 20px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  nav a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .hero {
+    background-image: url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=1500&q=80');
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 2px 2px 5px #000;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    text-align: center;
+  }
+
+  .section {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    width: 250px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  footer {
+    background-color: #222;
+    color: #aaa;
+    text-align: center;
+    padding: 20px;
+  }
+
+  #tracking-section {
+    background-color: #f9f9f9;
+    padding: 40px 20px;
+  }
+
+  form {
+    margin-top: 20px;
+  }
+
+  input[type="text"] {
+    padding: 10px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  button {
+    padding: 10px 20px;
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+  #tracking-result {
+    margin-top: 20px;
+    font-weight: bold;
+  }
+
+  /* TIMELINE STYLES */
+  .timeline {
+    position: relative;
+    max-width: 500px;
+    margin: 30px auto;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: #ccc;
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-left: 50px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .dot {
+    position: absolute;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    top: 0;
+  }
+
+  .dot.latest {
+    background: green;
+  }
+
+  .dot.updated {
+    background: yellow;
+  }
+
+  .dot.future {
+    background: #ccc;
+  }
+
+  .pulse {
+    position: absolute;
+    left: 4px;
+    top: -4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0,128,0,0.3);
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.7); opacity: 0.7; }
+    50% { transform: scale(1.4); opacity: 0; }
+    100% { transform: scale(0.7); opacity: 0.7; }
+  }
+
+  .status-text {
+    display: inline-block;
+  }
+
+  .status-text.latest {
+    font-weight: bold;
+    font-size: 1.2em;
+    background-color: #fff4e0;
+    padding: 3px 6px;
+    border-radius: 3px;
+  }
+
+  .status-text.faded {
+    color: #aaa;
+  }
+
+  .time {
+    font-size: 0.9em;
+    color: gray;
+    display:block;
+  }
+
+  .location {
+    font-size: 0.9em;
+    color: #0077cc;
+    display:block;
+  }
+
+  .fold-btn {
+    cursor:pointer;
+    color:#0077cc;
+    font-size:0.9em;
+    margin-top:5px;
+    display:block;
+  }
+
   .hidden { display:none; }
+
 </style>
 </head>
 <body>
@@ -128,24 +302,33 @@ function trackDelivery(e){
     const item = document.createElement("div");
     item.className = "timeline-item";
     const dot = document.createElement("div");
-    dot.className = "dot";
     const text = document.createElement("div");
     text.className = "status-text";
     text.textContent = update.status;
 
-    if(i===totalItems-1){ // latest
-      dot.classList.add("latest");
+    // Dot logic
+    if(history.length === 1 && update.status === "Label Created, not yet in system"){
+      dot.className = "dot latest";
+      text.classList.add("latest");
       const pulse = document.createElement("div");
-      pulse.className="pulse";
+      pulse.className = "pulse";
       item.appendChild(pulse);
+    } else {
+      if(update.status === "Delivered"){
+        dot.className = "dot updated"; // yellow by default until updated
+        if(update.updated) dot.classList.replace("updated","latest"); // green if updated
+      } else if(i < totalItems -1) {
+        dot.className = "dot updated"; // yellow
+      } else {
+        dot.className = "dot future"; // faded gray
+      }
+    }
+
+    if(i === totalItems-1 && update.status !== "Label Created, not yet in system"){ 
       text.classList.add("latest");
-    } else if(update.status==="Label Created, not yet in system" && totalItems===1){
-      dot.classList.add("latest");
-      text.classList.add("latest");
-    } else if(i<totalItems-1-foldThreshold){
-      item.classList.add("hidden");
-      text.classList.add("faded");
-      dot.style.background="#eee";
+      const pulse = document.createElement("div");
+      pulse.className = "pulse";
+      item.appendChild(pulse);
     }
 
     if(update.time) {
@@ -166,14 +349,16 @@ function trackDelivery(e){
     timeline.appendChild(item);
   }
 
-  // Add fold/unfold button if more than foldThreshold
+  // Fold older items if more than foldThreshold
   if(totalItems>foldThreshold){
     const btn = document.createElement("span");
     btn.className="fold-btn";
     btn.textContent="Show More";
     btn.onclick = function(){
-      const hiddenItems = timeline.querySelectorAll(".hidden");
-      hiddenItems.forEach(el=>el.classList.toggle("hidden"));
+      const hiddenItems = timeline.querySelectorAll(".timeline-item");
+      hiddenItems.forEach((el,i)=>{
+        if(i<totalItems-foldThreshold) el.classList.toggle("hidden");
+      });
       btn.textContent = btn.textContent==="Show More" ? "Show Less" : "Show More";
     }
     timeline.appendChild(btn);
