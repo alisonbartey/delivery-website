@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SpeedyDelivery</title>
   <style>
+    /* ---------- Original / Base styles ---------- */
     body {
       margin: 0;
       font-family: Arial, sans-serif;
+      background: #fafafa;
     }
 
     header {
@@ -44,6 +46,7 @@
 
     .hero h1 {
       font-size: 48px;
+      margin: 0;
     }
 
     .section {
@@ -64,6 +67,7 @@
       padding: 20px;
       width: 250px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: white;
     }
 
     footer {
@@ -73,6 +77,7 @@
       padding: 20px;
     }
 
+    /* ---------- Tracking area base ---------- */
     #tracking-section {
       background-color: #f9f9f9;
       padding: 40px 20px;
@@ -101,17 +106,30 @@
 
     #tracking-result {
       margin-top: 20px;
+      max-width: 750px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
     }
 
-    /* Timeline styles */
+    /* ---------- Timeline (USPS-like) ---------- */
+    .progress-info {
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-align: center;
+      color: #333;
+    }
+
     .timeline-container {
       position: relative;
       margin-left: 30px;
       padding-left: 20px;
-      border-left: 2px solid #ddd;
-      overflow: hidden;
+      /* fallback thin left line (visible if JS animation disabled) */
+      border-left: 2px solid #eee;
+      overflow: visible;
     }
 
+    /* the animated fill line (we control height via JS) */
     .progress-line {
       position: absolute;
       left: -2px;
@@ -119,25 +137,25 @@
       width: 2px;
       height: 0;
       background-color: #ff6600;
-      animation: fillLine 1s ease forwards;
+      transition: height 900ms ease;
       z-index: 1;
-    }
-
-    @keyframes fillLine {
-      from { height: 0; }
-      to { height: 100%; }
+      border-radius: 1px;
     }
 
     .timeline-item {
       position: relative;
-      margin-bottom: 25px;
-      padding-left: 15px;
+      margin-bottom: 26px;
+      padding-left: 10px;
       opacity: 0;
       transform: translateY(10px);
-      animation: slideIn 0.5s ease forwards;
+      animation: slideIn 0.45s ease forwards;
+      z-index: 2;
+      background: transparent;
+      border-radius: 6px;
     }
 
     @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -146,23 +164,63 @@
       height: 14px;
       border-radius: 50%;
       position: absolute;
-      left: -28px;
-      top: 5px;
-      z-index: 2;
-      animation: bounce 0.4s ease;
+      left: -32px;
+      top: 6px;
+      z-index: 3;
+      transform-origin: center;
+      animation: bounce 420ms ease;
+      box-shadow: 0 0 0 3px rgba(255,102,0,0.08);
     }
 
     @keyframes bounce {
-      0% { transform: scale(0.5); }
-      50% { transform: scale(1.2); }
+      0% { transform: scale(0.5); opacity: 0; }
+      60% { transform: scale(1.18); opacity: 1; }
       100% { transform: scale(1); }
     }
 
-    /* Status colors */
-    .delivered { background-color: #28a745; }
-    .in-transit { background-color: #ff9800; }
-    .on-hold { background-color: #f44336; }
-    .arrived { background-color: #007bff; }
+    /* Dot color classes */
+    .timeline-dot.delivered { background: #28a745; }
+    .timeline-dot.in-transit { background: #ff9800; }
+    .timeline-dot.on-hold { background: #e53935; }
+    .timeline-dot.arrived { background: #007bff; }
+    .timeline-dot.pending { background: #6c757d; }
+
+    /* Status text colors */
+    .timeline-status { font-weight: 600; margin-bottom: 4px; }
+    .timeline-status.delivered { color: #28a745; }
+    .timeline-status.in-transit { color: #ff9800; }
+    .timeline-status.on-hold { color: #e53935; }
+    .timeline-status.arrived { color: #007bff; }
+    .timeline-status.pending { color: #6c757d; }
+
+    .timeline-location {
+      font-size: 0.92em;
+      color: #0077cc;
+      margin-bottom: 4px;
+    }
+
+    .timeline-time {
+      font-size: 0.85em;
+      color: #666;
+    }
+
+    /* Highlight for most recent */
+    .timeline-item.latest {
+      background-color: #fff8f3;
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border-left: 3px solid rgba(255,102,0,0.12);
+    }
+    .timeline-item.latest .timeline-status { font-size: 1.05em; color: #ff6600; }
+
+    /* small responsive tweak */
+    @media (max-width: 600px) {
+      .hero { height: 260px; }
+      .hero h1 { font-size: 28px; padding: 0 10px; }
+      input[type="text"] { width: 180px; }
+      #tracking-result { padding: 0 12px; }
+    }
   </style>
 </head>
 <body>
@@ -199,6 +257,24 @@
     </div>
   </section>
 
+  <section class="section">
+    <h2>Popular Packages</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>Express Delivery</h3>
+        <p>Within 2 hours across the city.</p>
+      </div>
+      <div class="card">
+        <h3>Same-Day Delivery</h3>
+        <p>Perfect for e-commerce and urgent needs.</p>
+      </div>
+      <div class="card">
+        <h3>Nationwide</h3>
+        <p>Fast shipping to every corner of the country.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- Tracking Section -->
   <section id="tracking-section">
     <h2>Track Your Delivery</h2>
@@ -206,7 +282,8 @@
       <input type="text" id="tracking-id" placeholder="Enter tracking number..." required />
       <button type="submit">Track</button>
     </form>
-    <div id="tracking-result"></div>
+
+    <div id="tracking-result" aria-live="polite"></div>
   </section>
 
   <footer>
@@ -214,75 +291,136 @@
   </footer>
 
   <script>
-    function trackDelivery(event) {
-      event.preventDefault();
-      const trackingId = document.getElementById('tracking-id').value.trim();
+    // Main handler
+    function trackDelivery(evt) {
+      evt.preventDefault();
+      const id = document.getElementById('tracking-id').value.trim();
       const resultDiv = document.getElementById('tracking-result');
-      resultDiv.innerHTML = ""; // clear old result
+      resultDiv.innerHTML = ""; // clear
 
+      // load from admin storage
       const data = JSON.parse(localStorage.getItem("trackingData")) || {};
 
-      if (trackingId in data) {
-        renderTimeline(data[trackingId], resultDiv);
-      } else {
+      if (!id) {
+        resultDiv.textContent = "Enter tracking ID.";
+        return;
+      }
+
+      if (!(id in data)) {
         resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
         resultDiv.style.color = "red";
+        return;
       }
+
+      // render timeline
+      renderTimeline(data[id], resultDiv);
     }
 
-    function renderTimeline(history, container) {
-      const timeline = document.createElement("div");
-      timeline.classList.add("timeline-container");
+    // Map status text to a sensible percent
+    function estimatePercentFromStatus(statusText, totalSteps) {
+      const s = (statusText || "").toLowerCase();
+      if (s.includes("delivered")) return 100;
+      if (s.includes("out for delivery") || s.includes("out for")) return 90;
+      if (s.includes("in transit") || s.includes("transit")) return 70;
+      if (s.includes("arrived")) return 60;
+      if (s.includes("picked up") || s.includes("picked")) return 40;
+      if (s.includes("label") || s.includes("created")) return 10;
+      if (s.includes("hold") || s.includes("on hold")) return 25;
+      // fallback: base on number of steps present
+      if (totalSteps && totalSteps > 0) {
+        return Math.min(95, Math.round((totalSteps / (totalSteps + 1)) * 100));
+      }
+      return 0;
+    }
 
-      // Progress line
-      const progressLine = document.createElement("div");
-      progressLine.classList.add("progress-line");
+    function renderTimeline(historyData, container) {
+      // copy -> sort newest first (so index 0 = latest)
+      const history = Array.isArray(historyData) ? historyData.slice() : [];
+      history.sort((a,b) => new Date(b.time) - new Date(a.time));
+
+      // progress / header info
+      const latest = history[0] || null;
+      const percent = estimatePercentFromStatus(latest ? latest.status : "", history.length);
+      const progressInfo = document.createElement('div');
+      progressInfo.className = 'progress-info';
+      progressInfo.textContent = `${percent}% complete — ${history.length} update(s) found • Latest: ${latest ? latest.status : 'N/A'}`;
+      container.appendChild(progressInfo);
+
+      // timeline container
+      const timeline = document.createElement('div');
+      timeline.className = 'timeline-container';
+
+      // add the animated progress line element (we'll set height in %)
+      const progressLine = document.createElement('div');
+      progressLine.className = 'progress-line';
+      progressLine.style.height = '0%'; // start empty
       timeline.appendChild(progressLine);
 
-      // Loop through history
-      history.forEach(update => {
-        const item = document.createElement("div");
-        item.classList.add("timeline-item");
+      // Build items (newest first)
+      history.forEach((update, index) => {
+        const item = document.createElement('div');
+        item.className = 'timeline-item';
+        // newest at top -> highlight index 0
+        if (index === 0) item.classList.add('latest');
 
-        // Dot
-        const dot = document.createElement("div");
-        dot.classList.add("timeline-dot");
+        // animation delay (so they come one-by-one)
+        item.style.animationDelay = `${index * 0.14}s`;
 
-        // Color coding
-        if (update.status.toLowerCase().includes("delivered")) dot.classList.add("delivered");
-        else if (update.status.toLowerCase().includes("transit")) dot.classList.add("in-transit");
-        else if (update.status.toLowerCase().includes("hold")) dot.classList.add("on-hold");
-        else dot.classList.add("arrived");
+        // dot
+        const dot = document.createElement('div');
+        dot.className = 'timeline-dot';
 
-        item.appendChild(dot);
+        const low = (update.status || "").toLowerCase();
+        if (low.includes("delivered")) dot.classList.add('delivered');
+        else if (low.includes("out for delivery") || low.includes("out for") || low.includes("transit")) dot.classList.add('in-transit');
+        else if (low.includes("hold") || low.includes("on hold")) dot.classList.add('on-hold');
+        else if (low.includes("arrived")) dot.classList.add('arrived');
+        else dot.classList.add('pending');
 
-        // Status text
-        const status = document.createElement("div");
-        status.textContent = update.status;
-        status.style.fontWeight = "bold";
-        item.appendChild(status);
+        // status text
+        const statusDiv = document.createElement('div');
+        statusDiv.className = 'timeline-status';
+        statusDiv.textContent = update.status || "Status update";
+        // color class too
+        if (low.includes("delivered")) statusDiv.classList.add('delivered');
+        else if (low.includes("out for delivery") || low.includes("out for") || low.includes("transit")) statusDiv.classList.add('in-transit');
+        else if (low.includes("hold") || low.includes("on hold")) statusDiv.classList.add('on-hold');
+        else if (low.includes("arrived")) statusDiv.classList.add('arrived');
+        else statusDiv.classList.add('pending');
 
-        // Location
+        // location
+        const locDiv = document.createElement('div');
         if (update.location) {
-          const loc = document.createElement("div");
-          loc.style.color = "#0077cc";
-          loc.style.fontSize = "0.9em";
-          loc.textContent = `📌 ${update.location}`;
-          item.appendChild(loc);
+          locDiv.className = 'timeline-location';
+          locDiv.textContent = `📌 ${update.location}`;
         }
 
-        // Time
-        const time = document.createElement("div");
-        time.style.fontSize = "0.8em";
-        time.style.color = "#666";
-        time.textContent = new Date(update.time).toLocaleString();
-        item.appendChild(time);
+        // time
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'timeline-time';
+        // guard against bad date
+        const dt = new Date(update.time);
+        timeDiv.textContent = isNaN(dt.getTime()) ? (update.time || '') : dt.toLocaleString();
 
+        // append
+        item.appendChild(dot);
+        item.appendChild(statusDiv);
+        if (update.location) item.appendChild(locDiv);
+        item.appendChild(timeDiv);
         timeline.appendChild(item);
       });
 
       container.appendChild(timeline);
+
+      // animate the fill line to the percent
+      // use setTimeout so DOM paints first, we get smooth transition
+      setTimeout(() => {
+        progressLine.style.height = `${percent}%`;
+      }, 80);
     }
+
+    // optional: auto-focus input for quick testing
+    document.getElementById('tracking-id').focus();
   </script>
 
 </body>
