@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - SpeedyDelivery</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { color: #ff6600; }
+    input, textarea {
+      display: block;
+      margin: 10px 0;
+      padding: 10px;
+      width: 300px;
+      max-width: 90%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #ff6600;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .log {
+      margin-top: 30px;
+      border-top: 1px solid #ddd;
+      padding-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Admin - Update Tracking</h2>
+  <input type="text" id="tracking-id" placeholder="Tracking ID">
+  <textarea id="tracking-status" rows="2" placeholder="Enter new status"></textarea>
+  <input type="datetime-local" id="tracking-time">
+  <button onclick="addUpdate()">Add Update</button>
+
+  <div class="log">
+    <h3>Current Data</h3>
+    <pre id="current-data"></pre>
+  </div>
+
+  <script>
+    function loadData() {
+      const data = JSON.parse(localStorage.getItem("trackingData")) || {};
+      document.getElementById("current-data").textContent = JSON.stringify(data, null, 2);
+    }
+
+    function addUpdate() {
+      const id = document.getElementById("tracking-id").value.trim();
+      const status = document.getElementById("tracking-status").value.trim();
+      const time = document.getElementById("tracking-time").value;
+
+      if (!id || !status || !time) {
+        alert("Fill all fields!");
+        return;
+      }
+
+      let data = JSON.parse(localStorage.getItem("trackingData")) || {};
+      if (!data[id]) data[id] = [];
+
+      data[id].push({ status, time });
+
+      localStorage.setItem("trackingData", JSON.stringify(data));
+      loadData();
+      alert("✅ Update Added!");
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
