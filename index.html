@@ -1,427 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SpeedyDelivery</title>
-  <style>
-    /* ---------- Original / Base styles ---------- */
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #fafafa;
-    }
-
-    header {
-      background-color: #ff6600;
-      padding: 20px;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    nav a {
-      color: white;
-      margin-left: 20px;
-      text-decoration: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .hero {
-      background-image: url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=1500&q=80');
-      background-size: cover;
-      background-position: center;
-      height: 400px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-shadow: 2px 2px 5px #000;
-    }
-
-    .hero h1 {
-      font-size: 48px;
-      margin: 0;
-    }
-
-    .section {
-      padding: 40px 20px;
-      text-align: center;
-    }
-
-    .cards {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      flex-wrap: wrap;
-    }
-
-    .card {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 20px;
-      width: 250px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      background: white;
-    }
-
-    footer {
-      background-color: #222;
-      color: #aaa;
-      text-align: center;
-      padding: 20px;
-    }
-
-    /* ---------- Tracking area base ---------- */
-    #tracking-section {
-      background-color: #f9f9f9;
-      padding: 40px 20px;
-    }
-
-    form {
-      margin-top: 20px;
-    }
-
-    input[type="text"] {
-      padding: 10px;
-      width: 250px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    button {
-      padding: 10px 20px;
-      background-color: #ff6600;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      margin-left: 10px;
-      cursor: pointer;
-    }
-
-    #tracking-result {
-      margin-top: 20px;
-      max-width: 750px;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: left;
-    }
-
-    /* ---------- Timeline (USPS-like) ---------- */
-    .progress-info {
-      font-weight: 600;
-      margin-bottom: 12px;
-      text-align: center;
-      color: #333;
-    }
-
-    .timeline-container {
-      position: relative;
-      margin-left: 30px;
-      padding-left: 20px;
-      /* fallback thin left line (visible if JS animation disabled) */
-      border-left: 2px solid #eee;
-      overflow: visible;
-    }
-
-    /* the animated fill line (we control height via JS) */
-    .progress-line {
-      position: absolute;
-      left: -2px;
-      top: 0;
-      width: 2px;
-      height: 0;
-      background-color: #ff6600;
-      transition: height 900ms ease;
-      z-index: 1;
-      border-radius: 1px;
-    }
-
-    .timeline-item {
-      position: relative;
-      margin-bottom: 26px;
-      padding-left: 10px;
-      opacity: 0;
-      transform: translateY(10px);
-      animation: slideIn 0.45s ease forwards;
-      z-index: 2;
-      background: transparent;
-      border-radius: 6px;
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .timeline-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      position: absolute;
-      left: -32px;
-      top: 6px;
-      z-index: 3;
-      transform-origin: center;
-      animation: bounce 420ms ease;
-      box-shadow: 0 0 0 3px rgba(255,102,0,0.08);
-    }
-
-    @keyframes bounce {
-      0% { transform: scale(0.5); opacity: 0; }
-      60% { transform: scale(1.18); opacity: 1; }
-      100% { transform: scale(1); }
-    }
-
-    /* Dot color classes */
-    .timeline-dot.delivered { background: #28a745; }
-    .timeline-dot.in-transit { background: #ff9800; }
-    .timeline-dot.on-hold { background: #e53935; }
-    .timeline-dot.arrived { background: #007bff; }
-    .timeline-dot.pending { background: #6c757d; }
-
-    /* Status text colors */
-    .timeline-status { font-weight: 600; margin-bottom: 4px; }
-    .timeline-status.delivered { color: #28a745; }
-    .timeline-status.in-transit { color: #ff9800; }
-    .timeline-status.on-hold { color: #e53935; }
-    .timeline-status.arrived { color: #007bff; }
-    .timeline-status.pending { color: #6c757d; }
-
-    .timeline-location {
-      font-size: 0.92em;
-      color: #0077cc;
-      margin-bottom: 4px;
-    }
-
-    .timeline-time {
-      font-size: 0.85em;
-      color: #666;
-    }
-
-    /* Highlight for most recent */
-    .timeline-item.latest {
-      background-color: #fff8f3;
-      border-radius: 8px;
-      padding: 10px 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      border-left: 3px solid rgba(255,102,0,0.12);
-    }
-    .timeline-item.latest .timeline-status { font-size: 1.05em; color: #ff6600; }
-
-    /* small responsive tweak */
-    @media (max-width: 600px) {
-      .hero { height: 260px; }
-      .hero h1 { font-size: 28px; padding: 0 10px; }
-      input[type="text"] { width: 180px; }
-      #tracking-result { padding: 0 12px; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SpeedyDelivery</title>
+<style>
+  body { margin: 0; font-family: Arial, sans-serif; background: #f5f5f5; }
+  header { background-color: #ff6600; padding: 20px; color: white; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+  nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; cursor: pointer; }
+  .hero { background-image: url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=1500&q=80'); background-size: cover; background-position: center; height: 400px; display: flex; justify-content: center; align-items: center; color: white; text-shadow: 2px 2px 5px #000; }
+  .hero h1 { font-size: 48px; }
+  .section { padding: 40px 20px; text-align: center; }
+  .cards { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+  .card { border: 1px solid #ccc; border-radius: 10px; padding: 20px; width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  footer { background-color: #222; color: #aaa; text-align: center; padding: 20px; }
+  #tracking-section { background-color: #f9f9f9; padding: 40px 20px; }
+  form { margin-top: 20px; }
+  input[type="text"] { padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px; }
+  button { padding: 10px 20px; background-color: #ff6600; color: white; border: none; border-radius: 5px; margin-left: 10px; cursor: pointer; }
+  #tracking-result { margin-top: 20px; font-weight: bold; }
+  /* Timeline */
+  .timeline { position: relative; max-width: 500px; margin: 30px auto; }
+  .timeline::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 4px; background: #ccc; }
+  .timeline-item { position: relative; padding-left: 50px; margin-bottom: 20px; }
+  .dot { position: absolute; left: 12px; width: 16px; height: 16px; border-radius: 50%; background: #ccc; top: 0; }
+  .dot.latest { background: #ff6600; animation: blink 1s infinite; }
+  @keyframes blink { 0%,50%,100%{opacity:1}25%,75%{opacity:0} }
+  .status-text { display: inline-block; }
+  .status-text.latest { font-weight: bold; background-color: #fff4e0; padding: 3px 6px; border-radius: 3px; }
+  .status-text.faded { color: #aaa; }
+  .time { font-size: 0.9em; color: gray; display:block; }
+  .location { font-size: 0.9em; color: #0077cc; display:block; }
+</style>
 </head>
 <body>
 
-  <header>
-    <h2>SpeedyDelivery</h2>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">Services</a>
-      <a href="#tracking-section">Track</a>
-      <a href="#">Contact</a>
-    </nav>
-  </header>
+<header>
+  <h2>SpeedyDelivery</h2>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Services</a>
+    <a href="#tracking-section">Track</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
 
-  <section class="hero">
-    <h1>Fast, Reliable & On-Time Delivery</h1>
-  </section>
+<section class="hero">
+  <h1>Fast, Reliable & On-Time Delivery</h1>
+</section>
 
-  <section class="section">
-    <h2>Why Choose Us?</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>Fast Delivery</h3>
-        <p>We deliver within hours, not days.</p>
-      </div>
-      <div class="card">
-        <h3>Real-time Tracking</h3>
-        <p>Track your package live with our mobile app.</p>
-      </div>
-      <div class="card">
-        <h3>24/7 Support</h3>
-        <p>We're here for you anytime, anywhere.</p>
-      </div>
+<section class="section">
+  <h2>Why Choose Us?</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Fast Delivery</h3>
+      <p>We deliver within hours, not days.</p>
     </div>
-  </section>
-
-  <section class="section">
-    <h2>Popular Packages</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>Express Delivery</h3>
-        <p>Within 2 hours across the city.</p>
-      </div>
-      <div class="card">
-        <h3>Same-Day Delivery</h3>
-        <p>Perfect for e-commerce and urgent needs.</p>
-      </div>
-      <div class="card">
-        <h3>Nationwide</h3>
-        <p>Fast shipping to every corner of the country.</p>
-      </div>
+    <div class="card">
+      <h3>Real-time Tracking</h3>
+      <p>Track your package live with our mobile app.</p>
     </div>
-  </section>
+    <div class="card">
+      <h3>24/7 Support</h3>
+      <p>We're here for you anytime, anywhere.</p>
+    </div>
+  </div>
+</section>
 
-  <!-- Tracking Section -->
-  <section id="tracking-section">
-    <h2>Track Your Delivery</h2>
-    <form onsubmit="trackDelivery(event)">
-      <input type="text" id="tracking-id" placeholder="Enter tracking number..." required />
-      <button type="submit">Track</button>
-    </form>
+<section class="section">
+  <h2>Popular Packages</h2>
+  <div class="cards">
+    <div class="card">
+      <h3>Express Delivery</h3>
+      <p>Within 2 hours across the city.</p>
+    </div>
+    <div class="card">
+      <h3>Same-Day Delivery</h3>
+      <p>Perfect for e-commerce and urgent needs.</p>
+    </div>
+    <div class="card">
+      <h3>Nationwide</h3>
+      <p>Fast shipping to every corner of the country.</p>
+    </div>
+  </div>
+</section>
 
-    <div id="tracking-result" aria-live="polite"></div>
-  </section>
+<section id="tracking-section">
+  <h2>Track Your Delivery</h2>
+  <form onsubmit="trackDelivery(event)">
+    <input type="text" id="tracking-id" placeholder="Enter tracking number..." required />
+    <button type="submit">Track</button>
+  </form>
+  <div id="tracking-result"></div>
+</section>
 
-  <footer>
-    &copy; 2025 SpeedyDelivery. All rights reserved.
-  </footer>
+<footer>
+  &copy; 2025 SpeedyDelivery. All rights reserved.
+</footer>
 
-  <script>
-    // Main handler
-    function trackDelivery(evt) {
-      evt.preventDefault();
-      const id = document.getElementById('tracking-id').value.trim();
-      const resultDiv = document.getElementById('tracking-result');
-      resultDiv.innerHTML = ""; // clear
+<script>
+function trackDelivery(e){
+  e.preventDefault();
+  const trackingId = document.getElementById("tracking-id").value.trim();
+  const resultDiv = document.getElementById("tracking-result");
+  const data = JSON.parse(localStorage.getItem("trackingData")) || {};
 
-      // load from admin storage
-      const data = JSON.parse(localStorage.getItem("trackingData")) || {};
+  resultDiv.innerHTML = "";
 
-      if (!id) {
-        resultDiv.textContent = "Enter tracking ID.";
-        return;
+  if(!(trackingId in data)){
+    resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
+    resultDiv.style.color = "red";
+    return;
+  }
+
+  const history = data[trackingId];
+  const timeline = document.createElement("div");
+  timeline.className = "timeline";
+
+  // Determine if only Label Created
+  const onlyLabelCreated = history.length === 1 && history[0].status==="Label Created, not yet in system";
+
+  // If only label created, show only that
+  if(onlyLabelCreated){
+    const item = document.createElement("div");
+    item.className = "timeline-item";
+    const dot = document.createElement("div");
+    dot.className = "dot latest";
+    const text = document.createElement("div");
+    text.className = "status-text latest";
+    text.textContent = history[0].status;
+    item.appendChild(dot);
+    item.appendChild(text);
+    timeline.appendChild(item);
+  } else {
+    // show full timeline
+    for(let i=history.length-1;i>=0;i--){
+      const update = history[i];
+      const item = document.createElement("div");
+      item.className = "timeline-item";
+      const dot = document.createElement("div");
+      dot.className = "dot";
+      const text = document.createElement("div");
+      text.className = "status-text";
+      text.textContent = update.status;
+      if(i===0) { // latest
+        dot.classList.add("latest");
+        text.classList.add("latest");
+      } else if(i>0) {
+        // faded future statuses (only for default USPS statuses not yet updated)
+        text.classList.add("faded");
+        dot.style.background="#eee";
       }
 
-      if (!(id in data)) {
-        resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
-        resultDiv.style.color = "red";
-        return;
+      if(update.time) {
+        const t = document.createElement("span");
+        t.className="time";
+        t.textContent = new Date(update.time).toLocaleString();
+        text.appendChild(t);
+      }
+      if(update.location) {
+        const loc = document.createElement("span");
+        loc.className="location";
+        loc.textContent=update.location;
+        text.appendChild(loc);
       }
 
-      // render timeline
-      renderTimeline(data[id], resultDiv);
+      item.appendChild(dot);
+      item.appendChild(text);
+      timeline.appendChild(item);
     }
+  }
 
-    // Map status text to a sensible percent
-    function estimatePercentFromStatus(statusText, totalSteps) {
-      const s = (statusText || "").toLowerCase();
-      if (s.includes("delivered")) return 100;
-      if (s.includes("out for delivery") || s.includes("out for")) return 90;
-      if (s.includes("in transit") || s.includes("transit")) return 70;
-      if (s.includes("arrived")) return 60;
-      if (s.includes("picked up") || s.includes("picked")) return 40;
-      if (s.includes("label") || s.includes("created")) return 10;
-      if (s.includes("hold") || s.includes("on hold")) return 25;
-      // fallback: base on number of steps present
-      if (totalSteps && totalSteps > 0) {
-        return Math.min(95, Math.round((totalSteps / (totalSteps + 1)) * 100));
-      }
-      return 0;
-    }
-
-    function renderTimeline(historyData, container) {
-      // copy -> sort newest first (so index 0 = latest)
-      const history = Array.isArray(historyData) ? historyData.slice() : [];
-      history.sort((a,b) => new Date(b.time) - new Date(a.time));
-
-      // progress / header info
-      const latest = history[0] || null;
-      const percent = estimatePercentFromStatus(latest ? latest.status : "", history.length);
-      const progressInfo = document.createElement('div');
-      progressInfo.className = 'progress-info';
-      progressInfo.textContent = `${percent}% complete — ${history.length} update(s) found • Latest: ${latest ? latest.status : 'N/A'}`;
-      container.appendChild(progressInfo);
-
-      // timeline container
-      const timeline = document.createElement('div');
-      timeline.className = 'timeline-container';
-
-      // add the animated progress line element (we'll set height in %)
-      const progressLine = document.createElement('div');
-      progressLine.className = 'progress-line';
-      progressLine.style.height = '0%'; // start empty
-      timeline.appendChild(progressLine);
-
-      // Build items (newest first)
-      history.forEach((update, index) => {
-        const item = document.createElement('div');
-        item.className = 'timeline-item';
-        // newest at top -> highlight index 0
-        if (index === 0) item.classList.add('latest');
-
-        // animation delay (so they come one-by-one)
-        item.style.animationDelay = `${index * 0.14}s`;
-
-        // dot
-        const dot = document.createElement('div');
-        dot.className = 'timeline-dot';
-
-        const low = (update.status || "").toLowerCase();
-        if (low.includes("delivered")) dot.classList.add('delivered');
-        else if (low.includes("out for delivery") || low.includes("out for") || low.includes("transit")) dot.classList.add('in-transit');
-        else if (low.includes("hold") || low.includes("on hold")) dot.classList.add('on-hold');
-        else if (low.includes("arrived")) dot.classList.add('arrived');
-        else dot.classList.add('pending');
-
-        // status text
-        const statusDiv = document.createElement('div');
-        statusDiv.className = 'timeline-status';
-        statusDiv.textContent = update.status || "Status update";
-        // color class too
-        if (low.includes("delivered")) statusDiv.classList.add('delivered');
-        else if (low.includes("out for delivery") || low.includes("out for") || low.includes("transit")) statusDiv.classList.add('in-transit');
-        else if (low.includes("hold") || low.includes("on hold")) statusDiv.classList.add('on-hold');
-        else if (low.includes("arrived")) statusDiv.classList.add('arrived');
-        else statusDiv.classList.add('pending');
-
-        // location
-        const locDiv = document.createElement('div');
-        if (update.location) {
-          locDiv.className = 'timeline-location';
-          locDiv.textContent = `📌 ${update.location}`;
-        }
-
-        // time
-        const timeDiv = document.createElement('div');
-        timeDiv.className = 'timeline-time';
-        // guard against bad date
-        const dt = new Date(update.time);
-        timeDiv.textContent = isNaN(dt.getTime()) ? (update.time || '') : dt.toLocaleString();
-
-        // append
-        item.appendChild(dot);
-        item.appendChild(statusDiv);
-        if (update.location) item.appendChild(locDiv);
-        item.appendChild(timeDiv);
-        timeline.appendChild(item);
-      });
-
-      container.appendChild(timeline);
-
-      // animate the fill line to the percent
-      // use setTimeout so DOM paints first, we get smooth transition
-      setTimeout(() => {
-        progressLine.style.height = `${percent}%`;
-      }, 80);
-    }
-
-    // optional: auto-focus input for quick testing
-    document.getElementById('tracking-id').focus();
-  </script>
+  resultDiv.appendChild(timeline);
+}
+</script>
 
 </body>
 </html>
