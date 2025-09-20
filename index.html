@@ -101,22 +101,49 @@
 
     #tracking-result {
       margin-top: 20px;
+    }
+
+    /* USPS-style vertical timeline */
+    .tracking-timeline {
+      position: relative;
+      margin-top: 20px;
+      padding-left: 30px;
+      border-left: 3px solid #ff6600;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 25px;
+      padding-left: 15px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -11px;
+      top: 5px;
+      width: 15px;
+      height: 15px;
+      background-color: #ff6600;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px #ff6600;
+    }
+
+    .timeline-status {
       font-weight: bold;
+      font-size: 1.05em;
+      margin-bottom: 3px;
     }
 
-    .history-card {
-      background: #fff;
-      border-left: 5px solid #ff6600;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    .timeline-location {
+      font-size: 0.9em;
+      color: #0077cc;
+      margin-bottom: 2px;
     }
 
-    .history-time {
+    .timeline-time {
       font-size: 0.85em;
       color: #555;
-      margin-top: 3px;
     }
   </style>
 </head>
@@ -192,38 +219,46 @@
       const trackingId = document.getElementById('tracking-id').value.trim();
       const resultDiv = document.getElementById('tracking-result');
 
-      // Load from localStorage (admin updates)
+      // Load data from localStorage
       const data = JSON.parse(localStorage.getItem("trackingData")) || {};
 
       if (trackingId in data) {
         const history = data[trackingId];
         history.sort((a, b) => new Date(a.time) - new Date(b.time));
 
-        resultDiv.innerHTML = ""; // clear previous result
+        resultDiv.innerHTML = ""; 
+        const container = document.createElement("div");
+        container.classList.add("tracking-timeline");
 
         history.forEach(update => {
-          const card = document.createElement("div");
-          card.classList.add("history-card");
+          const item = document.createElement("div");
+          item.classList.add("timeline-item");
+
+          const dot = document.createElement("div");
+          dot.classList.add("timeline-dot");
+          item.appendChild(dot);
 
           const status = document.createElement("div");
-          status.textContent = `📋 ${update.status}`;
-          card.appendChild(status);
+          status.classList.add("timeline-status");
+          status.textContent = update.status;
+          item.appendChild(status);
 
           if (update.location) {
             const loc = document.createElement("div");
-            loc.style.color = "#0077cc";
-            loc.style.fontSize = "0.9em";
-            loc.textContent = `📌 Last Known Location: ${update.location}`;
-            card.appendChild(loc);
+            loc.classList.add("timeline-location");
+            loc.textContent = `📌 ${update.location}`;
+            item.appendChild(loc);
           }
 
           const time = document.createElement("div");
-          time.classList.add("history-time");
+          time.classList.add("timeline-time");
           time.textContent = new Date(update.time).toLocaleString();
-          card.appendChild(time);
+          item.appendChild(time);
 
-          resultDiv.appendChild(card);
+          container.appendChild(item);
         });
+
+        resultDiv.appendChild(container);
       } else {
         resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
         resultDiv.style.color = "red";
