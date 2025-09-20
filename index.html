@@ -1,213 +1,233 @@
-<!DOCTYPE html>  <html lang="en">  
-<head>  
-  <meta charset="UTF-8" />  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
-  <title>SpeedyDelivery</title>  
-  <style>  
-    body {  
-      margin: 0;  
-      font-family: Arial, sans-serif;  
-    }  header {  
-  background-color: #ff6600;  
-  padding: 20px;  
-  color: white;  
-  display: flex;  
-  justify-content: space-between;  
-  align-items: center;  
-  position: sticky;  
-  top: 0;  
-  z-index: 100;  
-}  
-
-nav a {  
-  color: white;  
-  margin-left: 20px;  
-  text-decoration: none;  
-  font-weight: bold;  
-  cursor: pointer;  
-}  
-
-.hero {  
-  background-image: url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=1500&q=80');  
-  background-size: cover;  
-  background-position: center;  
-  height: 400px;  
-  display: flex;  
-  justify-content: center;  
-  align-items: center;  
-  color: white;  
-  text-shadow: 2px 2px 5px #000;  
-}  
-
-.hero h1 {  
-  font-size: 48px;  
-}  
-
-.section {  
-  padding: 40px 20px;  
-  text-align: center;  
-}  
-
-.cards {  
-  display: flex;  
-  justify-content: center;  
-  gap: 30px;  
-  flex-wrap: wrap;  
-}  
-
-.card {  
-  border: 1px solid #ccc;  
-  border-radius: 10px;  
-  padding: 20px;  
-  width: 250px;  
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);  
-}  
-
-footer {  
-  background-color: #222;  
-  color: #aaa;  
-  text-align: center;  
-  padding: 20px;  
-}  
-
-#tracking-section {  
-  background-color: #f9f9f9;  
-  padding: 40px 20px;  
-}  
-
-form {  
-  margin-top: 20px;  
-}  
-
-input[type="text"] {  
-  padding: 10px;  
-  width: 250px;  
-  border: 1px solid #ccc;  
-  border-radius: 5px;  
-}  
-
-button {  
-  padding: 10px 20px;  
-  background-color: #ff6600;  
-  color: white;  
-  border: none;  
-  border-radius: 5px;  
-  margin-left: 10px;  
-  cursor: pointer;  
-}  
-
-#tracking-result {  
-  margin-top: 20px;  
-  font-weight: bold;  
-}
-
-  </style>  
-</head>  
-<body>    <header>  
-    <h2>SpeedyDelivery</h2>  
-    <nav>  
-      <a href="#">Home</a>  
-      <a href="#">Services</a>  
-      <a href="#tracking-section">Track</a>  
-      <a href="#">Contact</a>  
-    </nav>  
-  </header>    <section class="hero">  
-    <h1>Fast, Reliable & On-Time Delivery</h1>  
-  </section>    <section class="section">  
-    <h2>Why Choose Us?</h2>  
-    <div class="cards">  
-      <div class="card">  
-        <h3>Fast Delivery</h3>  
-        <p>We deliver within hours, not days.</p>  
-      </div>  
-      <div class="card">  
-        <h3>Real-time Tracking</h3>  
-        <p>Track your package live with our mobile app.</p>  
-      </div>  
-      <div class="card">  
-        <h3>24/7 Support</h3>  
-        <p>We're here for you anytime, anywhere.</p>  
-      </div>  
-    </div>  
-  </section>    <section class="section">  
-    <h2>Popular Packages</h2>  
-    <div class="cards">  
-      <div class="card">  
-        <h3>Express Delivery</h3>  
-        <p>Within 2 hours across the city.</p>  
-      </div>  
-      <div class="card">  
-        <h3>Same-Day Delivery</h3>  
-        <p>Perfect for e-commerce and urgent needs.</p>  
-      </div>  
-      <div class="card">  
-        <h3>Nationwide</h3>  
-        <p>Fast shipping to every corner of the country.</p>  
-      </div>  
-    </div>  
-  </section>    <!-- Tracking Section -->    <section id="tracking-section">  
-    <h2>Track Your Delivery</h2>  
-    <form onsubmit="trackDelivery(event)">  
-      <input type="text" id="tracking-id" placeholder="Enter tracking number..." required />  
-      <button type="submit">Track</button>  
-    </form>  
-    <div id="tracking-result"></div>  
-  </section>    
-<footer>  
-    &copy; 2025 SpeedyDelivery. All rights reserved.  
-  </footer>    
-<script>
-  function trackDelivery(event) {
-    event.preventDefault();
-    const trackingId = document.getElementById('tracking-id').value.trim();
-    const resultDiv = document.getElementById('tracking-result');
-
-    // Fake tracking data with full history
-    const fakeStatus = {
-      "000000000000000": [
-        { status: "📦 Label Created", time: "July 25, 2025, 08:00 am" },
-        { status: "📋 Package Picked Up", time: "July 26, 2025, 02:30 pm" },
-        { status: "📋 Arrived at Custom Warehouse UK", time: "July 28, 2025, 03:34 pm" },
-        { status: "📋 In Transit to Next Location", time: "July 30, 2025, 07:34 pm" },
-        { status: "📦 Out for Delivery", time: "August 1, 2025, 09:15 am" },
-        { status: "✅ Package Delivered", time: "August 1, 2025, 02:45 pm" }
-      ],
-      "SP597396926": [
-        { status: "📋 Arrived at SPEEDY-DELIVERY Regional Origin Facility", time: "September 19, 2025, 5:23 pm" },
-       
-      ]
-    };
-
-    resultDiv.innerHTML = ""; // clear previous result
-
-    if (trackingId in fakeStatus) {
-      const history = fakeStatus[trackingId];
-      let timelineHTML = `<h3>Tracking History for ${trackingId}</h3><div class="timeline">`;
-
-      history.forEach(step => {
-        // Decide class based on status text
-        let className = "";
-        const statusLower = step.status.toLowerCase();
-        if (statusLower.includes("delivered")) className = "delivered";
-        else if (statusLower.includes("transit")) className = "transit";
-        else if (statusLower.includes("hold")) className = "hold";
-        else if (statusLower.includes("out for delivery")) className = "out";
-
-        timelineHTML += `
-          <div class="timeline-item ${className}">
-            <div class="timeline-status">${step.status}</div>
-            <div class="timeline-time">${step.time}</div>
-          </div>`;
-      });
-
-      timelineHTML += "</div>";
-      resultDiv.innerHTML = timelineHTML;
-      resultDiv.style.color = "black";
-    } else {
-      resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
-      resultDiv.style.color = "red";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SpeedyDelivery</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
     }
-  }
-</script>
-</body>  
-</html>  
+
+    header {
+      background-color: #ff6600;
+      padding: 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hero {
+      background-image: url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=1500&q=80');
+      background-size: cover;
+      background-position: center;
+      height: 400px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-shadow: 2px 2px 5px #000;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+    }
+
+    .section {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .cards {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      width: 250px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    footer {
+      background-color: #222;
+      color: #aaa;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #tracking-section {
+      background-color: #f9f9f9;
+      padding: 40px 20px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #ff6600;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-left: 10px;
+      cursor: pointer;
+    }
+
+    #tracking-result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    /* Simple colors for statuses */
+    .delivered { color: green; }
+    .transit { color: orange; }
+    .hold { color: red; }
+    .out { color: blue; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h2>SpeedyDelivery</h2>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Services</a>
+      <a href="#tracking-section">Track</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Fast, Reliable & On-Time Delivery</h1>
+  </section>
+
+  <section class="section">
+    <h2>Why Choose Us?</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>Fast Delivery</h3>
+        <p>We deliver within hours, not days.</p>
+      </div>
+      <div class="card">
+        <h3>Real-time Tracking</h3>
+        <p>Track your package live with our mobile app.</p>
+      </div>
+      <div class="card">
+        <h3>24/7 Support</h3>
+        <p>We're here for you anytime, anywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Popular Packages</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>Express Delivery</h3>
+        <p>Within 2 hours across the city.</p>
+      </div>
+      <div class="card">
+        <h3>Same-Day Delivery</h3>
+        <p>Perfect for e-commerce and urgent needs.</p>
+      </div>
+      <div class="card">
+        <h3>Nationwide</h3>
+        <p>Fast shipping to every corner of the country.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tracking Section -->
+  <section id="tracking-section">
+    <h2>Track Your Delivery</h2>
+    <form onsubmit="trackDelivery(event)">
+      <input type="text" id="tracking-id" placeholder="Enter tracking number..." required />
+      <button type="submit">Track</button>
+    </form>
+    <div id="tracking-result"></div>
+  </section>
+
+  <footer>
+    &copy; 2025 SpeedyDelivery. All rights reserved.
+  </footer>
+
+  <script>
+    function trackDelivery(event) {
+      event.preventDefault();
+      const trackingId = document.getElementById('tracking-id').value.trim();
+      const resultDiv = document.getElementById('tracking-result');
+
+      // Fake tracking data with colored statuses
+      const fakeStatus = {
+        "000000000000000": [
+          { status: "📦 Label Created", time: "July 25, 2025, 08:00 am" },
+          { status: "📋 Package Picked Up", time: "July 26, 2025, 02:30 pm" },
+          { status: "📋 Arrived at Custom Warehouse UK", time: "July 28, 2025, 03:34 pm" },
+          { status: "📋 In Transit to Next Location", time: "July 30, 2025, 07:34 pm" },
+          { status: "📦 Out for Delivery", time: "August 1, 2025, 09:15 am" },
+          { status: "✅ Package Delivered", time: "August 1, 2025, 02:45 pm" }
+        ],
+        "SP597396926": [
+          { status: "📋 Arrived at SPEEDY-DELIVERY Regional Origin Facility", time: "September 19, 2025, 5:23 pm" }
+        ]
+      };
+
+      resultDiv.innerHTML = ""; // clear previous result
+
+      if (trackingId in fakeStatus) {
+        const history = fakeStatus[trackingId];
+        let timelineHTML = `<h3>Tracking History for ${trackingId}</h3><div class="timeline">`;
+
+        history.forEach(step => {
+          // Decide class based on status text
+          let className = "";
+          const statusLower = step.status.toLowerCase();
+          if (statusLower.includes("delivered")) className = "delivered";
+          else if (statusLower.includes("transit")) className = "transit";
+          else if (statusLower.includes("hold")) className = "hold";
+          else if (statusLower.includes("out for delivery")) className = "out";
+
+          timelineHTML += `
+            <div class="timeline-item ${className}">
+              <div class="timeline-status">${step.status}</div>
+              <div class="timeline-time">${step.time}</div>
+            </div>`;
+        });
+
+        timelineHTML += "</div>";
+        resultDiv.innerHTML = timelineHTML;
+      } else {
+        resultDiv.textContent = "❌ Tracking ID not found. Please check and try again.";
+        resultDiv.style.color = "red";
+      }
+    }
+  </script>
+
+</body>
+</html>
