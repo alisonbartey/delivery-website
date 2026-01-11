@@ -1,245 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title data-i18n="title">SpeedyDelivery</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpeedyDelivery</title>
 
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; }
-    header { background-color: #ff6600; padding: 20px; color: white;
-      display: flex; justify-content: space-between; align-items: center; }
-    nav a { color: white; margin-left: 20px; text-decoration: none;
-      font-weight: bold; cursor: pointer; }
-    #lang-switcher { padding: 5px; margin-left: 20px; }
-
-    .hero {
-      background-image: url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=1500&q=80');
-      background-size: cover; background-position: center;
-      height: 400px; display: flex; justify-content: center; align-items: center;
-      color: white; text-shadow: 2px 2px 5px #000;
-    }
-    .hero h1 { font-size: 48px; }
-
-    .section { padding: 40px 20px; text-align: center; }
-    .cards { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
-    .card { border: 1px solid #ccc; border-radius: 10px; padding: 20px;
-      width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    footer { background-color: #222; color: #aaa; text-align: center; padding: 20px; }
-
-    #tracking-section { background-color: #f9f9f9; padding: 40px 20px; }
-    input[type="text"] { padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px; }
-    button { padding: 10px 20px; background-color: #ff6600; color: white; border: none;
-      border-radius: 5px; margin-left: 10px; cursor: pointer; }
-
-    .delivered { color: green; } .transit { color: orange; }
-    .hold { color: red; } .out { color: blue; }
-  </style>
+<style>
+  body { margin: 0; font-family: Arial, sans-serif; }
+  header {
+    background-color: #ff6600; padding: 20px; color: white;
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 100;
+  }
+  nav a { color: white; margin-left: 20px; text-decoration: none; font-weight: bold; cursor: pointer; }
+  .hero {
+    background-image: url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=1500&q=80');
+    background-size: cover; background-position: center; height: 400px;
+    display: flex; justify-content: center; align-items: center; color: white;
+    text-shadow: 2px 2px 5px #000;
+  }
+  .hero h1 { font-size: 48px; }
+  .section { padding: 40px 20px; text-align: center; }
+  .cards { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+  .card {
+    border: 1px solid #ccc; border-radius: 10px; padding: 20px; width: 250px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  footer { background-color: #222; color: #aaa; text-align: center; padding: 20px; }
+  #tracking-section { background-color: #f9f9f9; padding: 40px 20px; }
+  form { margin-top: 20px; }
+  input { padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px; }
+  button {
+    padding: 10px 20px; background-color: #ff6600; color: white;
+    border: none; border-radius: 5px; margin-left: 10px; cursor: pointer;
+  }
+  #tracking-result { margin-top: 20px; font-weight: bold; }
+</style>
 
 </head>
 <body>
 
-  <header>
-    <h2 data-i18n="title">SpeedyDelivery</h2>
+<header>
+  <h2 id="title">SpeedyDelivery</h2>
+  <nav>
+    <a id="nav-home" href="#">Home</a>
+    <a id="nav-services" href="#">Services</a>
+    <a id="nav-track" href="#tracking-section">Track</a>
+    <a id="nav-contact" href="#">Contact</a>
+  </nav>
+</header>
 
-    <nav>
-      <a href="#" data-i18n="home">Home</a>
-      <a href="#" data-i18n="services">Services</a>
-      <a href="#tracking-section" data-i18n="track">Track</a>
-      <a href="#" data-i18n="contact">Contact</a>
+<section class="hero">
+  <h1 id="hero-title">Fast, Reliable & On-Time Delivery</h1>
+</section>
 
-      <!-- Manual language selector -->
-      <select id="lang-switcher" onchange="setLanguage(this.value)">
-        <option value="en">English</option>
-        <option value="de">Deutsch</option>
-        <option value="es">Español</option>
-        <option value="pl">Polski</option>
-        <option value="hi">हिन्दी</option>
-      </select>
-    </nav>
-  </header>
-
-  <section class="hero">
-    <h1 data-i18n="hero">Fast, Reliable & On-Time Delivery</h1>
-  </section>
-
-  <section class="section">
-    <h2 data-i18n="whyChoose">Why Choose Us?</h2>
-    <div class="cards">
-      <div class="card">
-        <h3 data-i18n="fastDelivery">Fast Delivery</h3>
-        <p data-i18n="fastDeliveryTxt">We deliver within hours, not days.</p>
-      </div>
-
-      <div class="card">
-        <h3 data-i18n="realtime">Real-time Tracking</h3>
-        <p data-i18n="realtimeTxt">Track your package live with our mobile app.</p>
-      </div>
-
-      <div class="card">
-        <h3 data-i18n="support">24/7 Support</h3>
-        <p data-i18n="supportTxt">We're here for you anytime, anywhere.</p>
-      </div>
+<section class="section">
+  <h2 id="why-title">Why Choose Us?</h2>
+  <div class="cards">
+    <div class="card">
+      <h3 id="card1-title">Fast Delivery</h3>
+      <p id="card1-text">We deliver within hours, not days.</p>
     </div>
-  </section>
-
-  <section class="section">
-    <h2 data-i18n="popular">Popular Packages</h2>
-    <div class="cards">
-      <div class="card">
-        <h3 data-i18n="express">Express Delivery</h3>
-        <p data-i18n="expressTxt">Within 2 hours across the city.</p>
-      </div>
-
-      <div class="card">
-        <h3 data-i18n="sameDay">Same-Day Delivery</h3>
-        <p data-i18n="sameDayTxt">Perfect for e-commerce and urgent needs.</p>
-      </div>
-
-      <div class="card">
-        <h3 data-i18n="nationwide">Nationwide</h3>
-        <p data-i18n="nationwideTxt">Fast shipping to every corner of the country.</p>
-      </div>
+    <div class="card">
+      <h3 id="card2-title">Real-time Tracking</h3>
+      <p id="card2-text">Track your package live with our mobile app.</p>
     </div>
-  </section>
+    <div class="card">
+      <h3 id="card3-title">24/7 Support</h3>
+      <p id="card3-text">We're here for you anytime, anywhere.</p>
+    </div>
+  </div>
+</section>
 
-  <section id="tracking-section">
-    <h2 data-i18n="trackTitle">Track Your Delivery</h2>
-    <form onsubmit="trackDelivery(event)">
-      <input type="text" id="tracking-id" placeholder="Enter tracking number..." required />
-      <button id="track-btn" type="submit" data-i18n="trackBtn">Track</button>
-    </form>
-    <div id="tracking-result"></div>
-  </section>
+<section id="tracking-section">
+  <h2 id="track-title">Track Your Delivery</h2>
+  <form onsubmit="trackDelivery(event)">
+    <input type="text" id="tracking-id" placeholder="Enter tracking number..." required>
+    <button type="submit" id="track-button">Track</button>
+  </form>
+  <div id="tracking-result"></div>
+</section>
 
-  <footer>
-    &copy; 2025 SpeedyDelivery. All rights reserved.
-  </footer>
+<footer>
+  &copy; 2026 SpeedyDelivery. All rights reserved.
+</footer>
 
-  <!-- Language + IP Detection Script -->
-  <script>
-    const translations = {
+<script>
+/* ------------------------------
+ MULTILINGUAL DICTIONARY
+------------------------------ */
+const translations = {
+  en: {
+    home: "Home",
+    services: "Services",
+    track: "Track",
+    contact: "Contact",
+    hero: "Fast, Reliable & On-Time Delivery",
+    why: "Why Choose Us?",
+    fast: "Fast Delivery",
+    fasttext: "We deliver within hours, not days.",
+    realtime: "Real-time Tracking",
+    realtimetext: "Track your package live with our mobile app.",
+    support: "24/7 Support",
+    supporttext: "We're here for you anytime, anywhere.",
+    trackyour: "Track Your Delivery",
+    trackbtn: "Track",
+    enterid: "Enter tracking number..."
+  },
+  de: {
+    home: "Startseite",
+    services: "Dienstleistungen",
+    track: "Verfolgen",
+    contact: "Kontakt",
+    hero: "Schnelle, zuverlässige und pünktliche Lieferung",
+    why: "Warum uns wählen?",
+    fast: "Schnelle Lieferung",
+    fasttext: "Wir liefern innerhalb von Stunden, nicht Tagen.",
+    realtime: "Echtzeit-Tracking",
+    realtimetext: "Verfolgen Sie Ihr Paket live.",
+    support: "24/7 Unterstützung",
+    supporttext: "Wir sind immer für Sie da.",
+    trackyour: "Lieferung verfolgen",
+    trackbtn: "Verfolgen",
+    enterid: "Sendungsnummer eingeben..."
+  },
+  es: {
+    home: "Inicio",
+    services: "Servicios",
+    track: "Rastrear",
+    contact: "Contacto",
+    hero: "Entrega rápida, confiable y puntual",
+    why: "¿Por qué elegirnos?",
+    fast: "Entrega rápida",
+    fasttext: "Entregamos en horas, no días.",
+    realtime: "Seguimiento en tiempo real",
+    realtimetext: "Rastrea tu paquete en vivo.",
+    support: "Soporte 24/7",
+    supporttext: "Siempre estamos aquí para ti.",
+    trackyour: "Rastrear Envío",
+    trackbtn: "Rastrear",
+    enterid: "Ingresa número de rastreo..."
+  },
+  pl: {
+    home: "Strona główna",
+    services: "Usługi",
+    track: "Śledzenie",
+    contact: "Kontakt",
+    hero: "Szybka, niezawodna i terminowa dostawa",
+    why: "Dlaczego my?",
+    fast: "Szybka dostawa",
+    fasttext: "Dostarczamy w ciągu godzin, nie dni.",
+    realtime: "Śledzenie na żywo",
+    realtimetext: "Śledź swoją paczkę w czasie rzeczywistym.",
+    support: "Wsparcie 24/7",
+    supporttext: "Jesteśmy tutaj dla Ciebie cały czas.",
+    trackyour: "Śledź przesyłkę",
+    trackbtn: "Śledź",
+    enterid: "Wpisz numer przesyłki..."
+  },
+  hi: {
+    home: "होम",
+    services: "सेवाएँ",
+    track: "ट्रैक करें",
+    contact: "संपर्क",
+    hero: "तेज़, विश्वसनीय और समय पर डिलीवरी",
+    why: "हमें क्यों चुनें?",
+    fast: "तेज़ डिलीवरी",
+    fasttext: "हम घंटे में डिलीवर करते हैं, दिनों में नहीं।",
+    realtime: "रीयल-टाइम ट्रैकिंग",
+    realtimetext: "अपने पैकेज को लाइव ट्रैक करें।",
+    support: "24/7 सहायता",
+    supporttext: "हम हमेशा आपके लिए यहाँ हैं।",
+    trackyour: "अपनी डिलीवरी ट्रैक करें",
+    trackbtn: "ट्रैक करें",
+    enterid: "ट्रैकिंग नंबर दर्ज करें..."
+  }
+};
 
-      en: {
-        title:"SpeedyDelivery", home:"Home", services:"Services", track:"Track", contact:"Contact",
-        hero:"Fast, Reliable & On-Time Delivery",
-        whyChoose:"Why Choose Us?",
-        fastDelivery:"Fast Delivery", fastDeliveryTxt:"We deliver within hours, not days.",
-        realtime:"Real-time Tracking", realtimeTxt:"Track your package live with our mobile app.",
-        support:"24/7 Support", supportTxt:"We're here for you anytime, anywhere.",
-        popular:"Popular Packages", express:"Express Delivery", expressTxt:"Within 2 hours across the city.",
-        sameDay:"Same-Day Delivery", sameDayTxt:"Perfect for e-commerce and urgent needs.",
-        nationwide:"Nationwide", nationwideTxt:"Fast shipping to every corner of the country.",
-        trackTitle:"Track Your Delivery", trackPlaceholder:"Enter tracking number...",
-        trackBtn:"Track", notFound:"❌ Tracking ID not found. Please check and try again."
-      },
+/* ------------------------------
+ AUTO DETECT IP REGION
+------------------------------ */
+async function detectRegion() {
+  try {
+    const res = await fetch("https://ipapi.co/json/");
+    return await res.json();
+  } catch {
+    return { country: "US", currency: "USD" };
+  }
+}
 
-      de: {
-        title:"SpeedyDelivery", home:"Startseite", services:"Dienstleistungen", track:"Sendung verfolgen", contact:"Kontakt",
-        hero:"Schnelle, zuverlässige und pünktliche Lieferung",
-        whyChoose:"Warum wir?",
-        fastDelivery:"Schnelle Lieferung", fastDeliveryTxt:"Wir liefern in Stunden, nicht Tagen.",
-        realtime:"Echtzeit-Tracking", realtimeTxt:"Verfolgen Sie Ihr Paket live über unsere App.",
-        support:"24/7 Support", supportTxt:"Wir sind jederzeit für Sie da.",
-        popular:"Beliebte Pakete", express:"Express Lieferung", expressTxt:"Innerhalb von 2 Stunden in der Stadt.",
-        sameDay:"Taggleiche Lieferung", sameDayTxt:"Ideal für E-Commerce und dringende Sendungen.",
-        nationwide:"Landesweit", nationwideTxt:"Schneller Versand in das ganze Land.",
-        trackTitle:"Ihre Lieferung verfolgen", trackPlaceholder:"Sendungsnummer eingeben...",
-        trackBtn:"Verfolgen", notFound:"❌ Sendungsnummer nicht gefunden."
-      },
+/* ------------------------------
+ APPLY LANGUAGE TRANSLATIONS
+------------------------------ */
+async function applyLanguage() {
+  const region = await detectRegion();
 
-      es: {
-        title:"SpeedyDelivery", home:"Inicio", services:"Servicios", track:"Rastrear", contact:"Contacto",
-        hero:"Entrega rápida, confiable y puntual",
-        whyChoose:"¿Por qué elegirnos?",
-        fastDelivery:"Entrega rápida", fastDeliveryTxt:"Entregamos en horas, no días.",
-        realtime:"Seguimiento en tiempo real", realtimeTxt:"Rastrea tu paquete en vivo con nuestra app.",
-        support:"Soporte 24/7", supportTxt:"Estamos aquí para ti en cualquier momento.",
-        popular:"Paquetes Populares", express:"Entrega Exprés", expressTxt:"Dentro de 2 horas en la ciudad.",
-        sameDay:"Entrega en el mismo día", sameDayTxt:"Perfecto para e-commerce y urgencias.",
-        nationwide:"Nacional", nationwideTxt:"Envíos rápidos a todo el país.",
-        trackTitle:"Rastrea tu envío", trackPlaceholder:"Ingresa el número de rastreo...",
-        trackBtn:"Rastrear", notFound:"❌ Número de rastreo no encontrado."
-      },
+  const langMap = { DE: "de", ES: "es", MX: "es", PL: "pl", IN: "hi" };
+  const userLang = langMap[region.country] || "en";
+  const t = translations[userLang];
 
-      pl: {
-        title:"SpeedyDelivery", home:"Strona główna", services:"Usługi", track:"Śledzenie", contact:"Kontakt",
-        hero:"Szybkie, niezawodne i terminowe dostawy",
-        whyChoose:"Dlaczego my?",
-        fastDelivery:"Szybka dostawa", fastDeliveryTxt:"Dostarczamy w godzinach, nie dniach.",
-        realtime:"Śledzenie w czasie rzeczywistym", realtimeTxt:"Śledź paczkę na żywo w naszej aplikacji.",
-        support:"Wsparcie 24/7", supportTxt:"Jesteśmy dla Ciebie o każdej porze.",
-        popular:"Popularne pakiety", express:"Dostawa ekspresowa", expressTxt:"W ciągu 2 godzin w mieście.",
-        sameDay:"Dostawa tego samego dnia", sameDayTxt:"Idealne dla pilnych przesyłek.",
-        nationwide:"Ogólnokrajowo", nationwideTxt:"Szybka wysyłka wszędzie.",
-        trackTitle:"Śledź swoją przesyłkę", trackPlaceholder:"Wpisz numer śledzenia...",
-        trackBtn:"Śledź", notFound:"❌ Numer śledzenia nie znaleziony."
-      },
+  document.getElementById("nav-home").innerText = t.home;
+  document.getElementById("nav-services").innerText = t.services;
+  document.getElementById("nav-track").innerText = t.track;
+  document.getElementById("nav-contact").innerText = t.contact;
 
-      hi: {
-        title:"स्पीडी डिलीवरी", home:"होम", services:"सेवाएं", track:"ट्रैक करें", contact:"संपर्क",
-        hero:"तेज़, विश्वसनीय और समय पर डिलीवरी",
-        whyChoose:"क्यों चुनें हमें?",
-        fastDelivery:"तेज़ डिलीवरी", fastDeliveryTxt:"हम घंटों में डिलीवरी करते हैं, दिनों में नहीं।",
-        realtime:"रियल-टाइम ट्रैकिंग", realtimeTxt:"हमारे ऐप से अपने पैकेज को लाइव ट्रैक करें।",
-        support:"24/7 सहायता", supportTxt:"हम हर समय आपके लिए उपलब्ध हैं।",
-        popular:"लोकप्रिय पैकेज", express:"एक्सप्रेस डिलीवरी", expressTxt:"2 घंटे के भीतर शहर में।",
-        sameDay:"उसी दिन डिलीवरी", sameDayTxt:"ई-कॉमर्स और जरूरी आवश्यकताओं के लिए उपयुक्त।",
-        nationwide:"देश भर में", nationwideTxt:"तेज़ शिपिंग पूरे देश में।",
-        trackTitle:"अपनी डिलीवरी ट्रैक करें", trackPlaceholder:"ट्रैकिंग नंबर दर्ज करें...",
-        trackBtn:"ट्रैक", notFound:"❌ ट्रैकिंग आईडी नहीं मिली।"
-      }
-    };
+  document.getElementById("hero-title").innerText = t.hero;
+  document.getElementById("why-title").innerText = t.why;
 
+  document.getElementById("card1-title").innerText = t.fast;
+  document.getElementById("card1-text").innerText = t.fasttext;
 
-    async function detectLanguageByIP() {
-      if (localStorage.getItem("lang")) return; // user already chose a language
+  document.getElementById("card2-title").innerText = t.realtime;
+  document.getElementById("card2-text").innerText = t.realtimetext;
 
-      try {
-        const res = await fetch("https://ipapi.co/json/");
-        const data = await res.json();
-        const country = data.country;
+  document.getElementById("card3-title").innerText = t.support;
+  document.getElementById("card3-text").innerText = t.supporttext;
 
-        const map = {
-          "DE": "de",
-          "ES": "es",
-          "MX": "es",
-          "PL": "pl",
-          "IN": "hi"
-        };
+  document.getElementById("track-title").innerText = t.trackyour;
+  document.getElementById("track-button").innerText = t.trackbtn;
+  document.getElementById("tracking-id").placeholder = t.enterid;
+}
+applyLanguage();
 
-        const lang = map[country] || "en";
-        setLanguage(lang);
+/* ------------------------------
+ TRACKING DATA (EDIT HERE)
+------------------------------ */
+const trackingData = {
+  "ABC123": {
+    basePrice: 25,
+    currency: "USD",
+    history: [
+      { status: "Package Created", time: "Jan 2, 2026 - 10:00 AM" },
+      { status: "Picked Up", time: "Jan 2, 2026 - 11:15 AM" },
+      { status: "In Transit", time: "Jan 3, 2026 - 5:15 PM" }
+    ]
+  },
+  "XYZ999": {
+    basePrice: 15,
+    currency: "EUR",
+    history: [
+      { status: "Arrived at Warehouse", time: "Jan 5, 2026 - 4:10 PM" },
+      { status: "Out for Delivery", time: "Jan 6, 2026 - 8:55 AM" }
+    ]
+  },
+  "SP1234567": {
+    basePrice: 999,
+    currency: "INR",
+    history: [
+      { status: "Package Created", time: "Feb 1, 2026 - 9:00 AM" }
+    ]
+  }
+};
 
-      } catch (e) {
-        console.log("IP detection failed, using English.");
-        setLanguage("en");
-      }
-    }
+/* ------------------------------
+ CURRENCY CONVERSION API
+------------------------------ */
+async function convertPrice(amount, from, to) {
+  try {
+    const r = await fetch(`https://api.exchangerate.host/convert?from=${from}&to=${to}`);
+    const d = await r.json();
+    return (amount * d.result).toFixed(2);
+  } catch {
+    return amount;
+  }
+}
 
-    function setLanguage(lang) {
-      localStorage.setItem("lang", lang);
-      document.getElementById("lang-switcher").value = lang;
-      translatePage();
-    }
+/* ------------------------------
+ SHOW TRACKING RESULT
+------------------------------ */
+async function showTracking(id) {
+  const data = trackingData[id];
+  const output = document.getElementById("tracking-result");
 
-    function translatePage() {
-      const lang = localStorage.getItem("lang") || "en";
+  if (!data) {
+    output.innerHTML = "<p style='color:red'>❌ Tracking ID not found.</p>";
+    return;
+  }
 
-      document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.getAttribute("data-i18n");
-        if (translations[lang][key]) el.innerHTML = translations[lang][key];
-      });
+  const region = await detectRegion();
+  const converted = await convertPrice(data.basePrice, data.currency, region.currency);
 
-      document.getElementById("tracking-id").placeholder =
-        translations[lang].trackPlaceholder;
-    }
+  let html = `<h3>Tracking History for ${id}</h3>`;
+  html += `<p><b>Price:</b> ${region.currency} ${converted}</p><hr>`;
 
-    window.onload = () => {
-      detectLanguageByIP();
-      translatePage();
-    };
-  </script>
+  data.history.forEach(step => {
+    html += `
+      <div>
+        <b>${step.status}</b><br>
+        <span>${step.time}</span>
+        <br><br>
+      </div>
+    `;
+  });
+
+  output.innerHTML = html;
+}
+
+function trackDelivery(e) {
+  e.preventDefault();
+  const id = document.getElementById("tracking-id").value.trim();
+  showTracking(id);
+}
+</script>
 
 </body>
 </html>
