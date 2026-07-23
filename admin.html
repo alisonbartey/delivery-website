@@ -1,183 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin - SpeedyDelivery</title>
-<style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-  h1 { text-align: center; color: #ff6600; }
-  .form-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto 30px auto; }
-  input, button { width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; }
-  button { background: #ff6600; color: white; font-weight: bold; border: none; cursor: pointer; }
-  .tracking-history { max-width: 700px; margin: 0 auto; }
-  .tracking-card { background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-  .status { font-weight: normal; padding: 5px 0; }
-  .latest { background: #fffae6; border-left: 5px solid #ff6600; padding-left: 10px; }
-  .time { color: gray; font-size: 0.9em; }
-  .location { color: #0077cc; font-size: 0.9em; }
-  .delete-btn, .edit-btn { border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; margin-left:5px;}
-  .delete-btn { background: red; color: white; }
-  .edit-btn { background: #0077cc; color: white; }
-  .clear-btn { display: block; margin: 20px auto; background: #444; }
-  .change-pass-btn { background: #555; color: white; margin-top: 10px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpeedyDelivery • Fast & Reliable</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .hero-bg {
+            background-image: linear-gradient(rgba(30, 58, 138, 0.75), rgba(30, 58, 138, 0.85)), 
+                             url('https://images.unsplash.com/photo-1604145559207-5c8e3f0b0dfb?auto=format&fit=crop&w=2000&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #ff6600;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-900">
 
-<h1>Admin Panel</h1>
+    <!-- HEADER -->
+    <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-orange-500 rounded-2xl flex items-center justify-center text-white text-3xl shadow-inner">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">SpeedyDelivery</h1>
+                    <p class="text-[10px] text-gray-500 -mt-1">ON TIME • EVERY TIME</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium">
+                <a href="#home" class="nav-link text-gray-700 hover:text-orange-600">Home</a>
+                <a href="#about" class="nav-link text-gray-700 hover:text-orange-600">About</a>
+                <a href="#services" class="nav-link text-gray-700 hover:text-orange-600">Services</a>
+                <a href="#tracking" class="nav-link text-gray-700 hover:text-orange-600">Track</a>
+                <a href="#contact" class="nav-link text-gray-700 hover:text-orange-600">Contact</a>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                <select id="language-select" onchange="changeLanguage()" 
+                        class="bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-orange-500">
+                    <option value="en">🇬🇧 EN</option>
+                    <option value="de">🇩🇪 DE</option>
+                    <option value="es">🇪🇸 ES</option>
+                    <option value="pl">🇵🇱 PL</option>
+                    <option value="hi">🇮🇳 HI</option>
+                </select>
+                
+                <button onclick="document.getElementById('tracking').scrollIntoView({ behavior: 'smooth' })" 
+                        class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-2xl font-semibold flex items-center gap-2 transition-colors">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Track</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
-<div class="form-container">
-  <input type="text" id="trackingId" placeholder="Tracking ID (leave empty to auto-generate)" />
-  <input type="text" id="status" placeholder="Status update..." required />
-  <input type="text" id="location" placeholder="Last known location (optional)" />
-  <input type="datetime-local" id="time" />
-  <button onclick="addTrackingUpdate()">Add/Save Update</button>
-  <button class="change-pass-btn" onclick="changePassword()">Change Password</button>
-</div>
+    <!-- HERO -->
+    <section id="home" class="hero-bg h-screen flex items-center text-white">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 id="hero-title" class="text-5xl md:text-7xl font-bold leading-tight mb-6">
+                Fast, Reliable &amp; On-Time Delivery
+            </h2>
+            <p id="hero-subtitle" class="text-xl md:text-2xl mb-10 text-orange-100">
+                From your door to their doorstep in hours
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="document.getElementById('tracking').scrollIntoView({ behavior: 'smooth' })" 
+                        class="bg-white text-orange-600 hover:bg-orange-50 px-10 py-4 rounded-3xl font-semibold text-lg flex items-center justify-center gap-3 transition-all">
+                    <i class="fa-solid fa-truck"></i>
+                    Track Your Package
+                </button>
+                <button onclick="document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })" 
+                        class="border-2 border-white hover:bg-white/10 px-10 py-4 rounded-3xl font-semibold text-lg transition-all">
+                    Get a Quote
+                </button>
+            </div>
+        </div>
+    </section>
 
-<div class="tracking-history" id="trackingHistory"></div>
-<button class="clear-btn" onclick="clearAll()">Clear All Data</button>
+    <!-- ABOUT US -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 id="about-title" class="text-4xl font-bold mb-6">About SpeedyDelivery</h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        Founded in 2024, we believe delivery shouldn't be stressful. 
+                        We combine advanced technology with exceptional service to make shipping faster and more transparent.
+                    </p>
+                    <p class="text-gray-600 mb-8">
+                        Today, we operate in over 50 cities across Europe, North America, and Latin America, 
+                        delivering thousands of packages every day with a 98% on-time rate.
+                    </p>
+                    <div class="grid grid-cols-3 gap-6 text-center">
+                        <div>
+                            <div class="text-4xl font-bold text-orange-600">50k+</div>
+                            <div class="text-sm text-gray-500">Packages Delivered</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-bold text-orange-600">98%</div>
+                            <div class="text-sm text-gray-500">On-Time Rate</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-bold text-orange-600">24/7</div>
+                            <div class="text-sm text-gray-500">Support</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="rounded-3xl overflow-hidden shadow-xl">
+                    <img src="https://images.unsplash.com/photo-1566576912321-d58e9f3f6a5c?auto=format&fit=crop&w=800&q=80" 
+                         alt="Our delivery team" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
 
-<script>
-let password = localStorage.getItem("adminPassword");
-if(!password){
-  password = prompt("Create Admin Password:");
-  localStorage.setItem("adminPassword", password);
-}
-else{
-  let input = prompt("Enter Admin Password:");
-  if(input !== password) {
-    alert("Wrong password! Access denied.");
-    document.body.innerHTML = "<h1 style='text-align:center;margin-top:50px;'>Access Denied</h1>";
-    throw new Error("Wrong password");
-  }
-}
+    <!-- SERVICES -->
+    <section id="services" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 id="services-title" class="text-4xl font-bold">Our Services</h2>
+                <p class="text-gray-600 mt-3">Solutions for individuals and businesses</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl card-hover border border-gray-100">
+                    <div class="w-14 h-14 bg-orange-100 text-orange-500 rounded-2xl flex items-center justify-center text-4xl mb-6">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Express Delivery</h3>
+                    <p class="text-gray-600">Same-day and next-day delivery for urgent packages and documents in major cities.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl card-hover border border-gray-100">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-500 rounded-2xl flex items-center justify-center text-4xl mb-6">
+                        <i class="fa-solid fa-globe"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">International Shipping</h3>
+                    <p class="text-gray-600">Cross-border delivery with real-time tracking and full customs support.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl card-hover border border-gray-100">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-500 rounded-2xl flex items-center justify-center text-4xl mb-6">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-3">Business Logistics</h3>
+                    <p class="text-gray-600">Bulk shipping, warehouse integration, API access, and dedicated support for companies.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-function changePassword(){
-  let current = prompt("Enter current password:");
-  if(current !== localStorage.getItem("adminPassword")){
-    alert("Wrong current password!");
-    return;
-  }
-  let newPass = prompt("Enter new password:");
-  if(newPass) localStorage.setItem("adminPassword", newPass);
-  alert("Password changed successfully!");
-}
+    <!-- TRACKING -->
+    <section id="tracking" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 id="track-title" class="text-4xl font-bold mb-2">Track Your Delivery</h2>
+                <p class="text-gray-600">Enter your tracking number for live updates</p>
+            </div>
+            
+            <form onsubmit="trackDelivery(event)" class="max-w-md mx-auto">
+                <div class="flex gap-3">
+                    <input 
+                        type="text" 
+                        id="tracking-id" 
+                        placeholder="Enter tracking number (e.g. SP77966193)" 
+                        class="flex-1 px-6 py-4 border border-gray-300 focus:border-orange-500 focus:outline-none rounded-3xl text-lg"
+                        required>
+                    <button type="submit" 
+                            class="bg-orange-500 hover:bg-orange-600 text-white px-10 rounded-3xl font-semibold transition-colors">
+                        Track
+                    </button>
+                </div>
+            </form>
+            
+            <div id="tracking-result" class="mt-12"></div>
+        </div>
+    </section>
 
-let trackingData = JSON.parse(localStorage.getItem("trackingData")) || {};
-let editing = null;
+    <!-- TESTIMONIALS -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">What Our Customers Say</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl">
+                    <p class="italic text-gray-700">"Delivered my laptop in under 4 hours across the city. Unreal service!"</p>
+                    <div class="mt-6 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-purple-200 rounded-full"></div>
+                        <div>
+                            <div class="font-semibold">Sarah Chen</div>
+                            <div class="text-sm text-gray-500">San Francisco, CA</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-3xl">
+                    <p class="italic text-gray-700">"Best delivery experience I've ever had. The tracking is incredibly accurate."</p>
+                    <div class="mt-6 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-amber-200 rounded-full"></div>
+                        <div>
+                            <div class="font-semibold">Miguel Rodriguez</div>
+                            <div class="text-sm text-gray-500">Mexico City</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-3xl">
+                    <p class="italic text-gray-700">"They picked up in London and delivered to Warsaw in just 48 hours. Amazing!"</p>
+                    <div class="mt-6 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-emerald-200 rounded-full"></div>
+                        <div>
+                            <div class="font-semibold">Anna Kowalska</div>
+                            <div class="text-sm text-gray-500">Warsaw, Poland</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-function saveData(){
-  localStorage.setItem("trackingData", JSON.stringify(trackingData));
-  renderHistory();
-}
+    <!-- CONTACT -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold">Get In Touch</h2>
+                <p class="text-gray-600 mt-3">Our team is ready to help you 24/7</p>
+            </div>
+            
+            <form onsubmit="submitContact(event)" class="grid md:grid-cols-2 gap-6">
+                <input type="text" placeholder="Full Name" class="px-6 py-4 border border-gray-300 rounded-3xl focus:outline-none focus:border-orange-500" required>
+                <input type="email" placeholder="Email Address" class="px-6 py-4 border border-gray-300 rounded-3xl focus:outline-none focus:border-orange-500" required>
+                <input type="tel" placeholder="Phone Number" class="px-6 py-4 border border-gray-300 rounded-3xl focus:outline-none focus:border-orange-500">
+                <input type="text" placeholder="Tracking Number (if applicable)" class="px-6 py-4 border border-gray-300 rounded-3xl focus:outline-none focus:border-orange-500">
+                <textarea placeholder="How can we help you today?" rows="5" 
+                          class="md:col-span-2 px-6 py-4 border border-gray-300 rounded-3xl focus:outline-none focus:border-orange-500"></textarea>
+                <button type="submit" 
+                        class="md:col-span-2 bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-3xl font-semibold text-lg transition-colors">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </section>
 
-function generateTrackingID(){
-  return 'SP'+Math.floor(100000000 + Math.random()*900000000);
-}
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400">
+        <div class="max-w-7xl mx-auto px-6 py-16">
+            <div class="grid md:grid-cols-4 gap-10">
+                <div>
+                    <div class="flex items-center gap-3 text-white mb-4">
+                        <div class="w-9 h-9 bg-orange-500 rounded-2xl flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <span class="font-bold text-xl">SpeedyDelivery</span>
+                    </div>
+                    <p class="text-sm">Making global delivery fast, reliable, and transparent.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#about" class="hover:text-white">About Us</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Services</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#services" class="hover:text-white">Express Delivery</a></li>
+                        <li><a href="#" class="hover:text-white">International Shipping</a></li>
+                        <li><a href="#" class="hover:text-white">Business Logistics</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Support</h4>
+                    <p class="text-sm mb-1">support@speedydelivery.com</p>
+                    <p class="text-sm">+1 (555) 123-4567</p>
+                    <div class="flex gap-4 mt-6 text-2xl">
+                        <i class="fa-brands fa-x-twitter hover:text-white cursor-pointer"></i>
+                        <i class="fa-brands fa-linkedin hover:text-white cursor-pointer"></i>
+                        <i class="fa-brands fa-instagram hover:text-white cursor-pointer"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-16 pt-8 text-center text-sm">
+                &copy; 2026 SpeedyDelivery. All rights reserved.
+            </div>
+        </div>
+    </footer>
 
-function addTrackingUpdate(){
-  let id = document.getElementById("trackingId").value.trim();
-  const status = document.getElementById("status").value.trim();
-  const location = document.getElementById("location").value.trim();
-  const time = document.getElementById("time").value || "";
+    <script>
+        /* Translations */
+        const translations = {
+            en: {
+                hero: "Fast, Reliable & On-Time Delivery",
+                about: "About SpeedyDelivery",
+                services: "Our Services",
+                trackyour: "Track Your Delivery"
+            },
+            de: {
+                hero: "Schnelle, zuverlässige und pünktliche Lieferung",
+                about: "Über SpeedyDelivery",
+                services: "Unsere Dienstleistungen",
+                trackyour: "Lieferung verfolgen"
+            },
+            es: {
+                hero: "Entrega Rápida, Confiable y Puntual",
+                about: "Sobre SpeedyDelivery",
+                services: "Nuestros Servicios",
+                trackyour: "Rastrear Envío"
+            },
+            pl: {
+                hero: "Szybka, Niezawodna i Terminowa Dostawa",
+                about: "O SpeedyDelivery",
+                services: "Nasze Usługi",
+                trackyour: "Śledź Przesyłkę"
+            },
+            hi: {
+                hero: "तेज़, विश्वसनीय और समय पर डिलीवरी",
+                about: "SpeedyDelivery के बारे में",
+                services: "हमारी सेवाएँ",
+                trackyour: "डिलीवरी ट्रैक करें"
+            }
+        };
 
-  if(!id) id = generateTrackingID();
+        let currentLang = 'en';
 
-  if(!trackingData[id]){
-    // New tracking ID → first status
-    trackingData[id] = [{status:"Label Created, not yet in system", location:""}];
-  }
+        function changeLanguage() {
+            currentLang = document.getElementById('language-select').value;
+            applyTranslations();
+        }
 
-  if(editing){
-    const {editId, editIndex} = editing;
-    trackingData[editId][editIndex] = {status, location, time};
-    editing = null;
-  } else {
-    trackingData[id].unshift({status, location, time});
-    // Add 6 default USPS-style statuses if first admin update
-    if(trackingData[id].length === 2){ // first + this new
-      const defaultStatuses = [
-        {status:"Shipment Accepted", location:""},
-        {status:"Arrived at Regional Facility", location:""},
-        {status:"In Transit", location:""},
-        {status:"Out for Delivery", location:""},
-        {status:"Arrived at Destination Facility", location:""},
-        {status:"Delivered", location:""}
-      ];
-      trackingData[id].push(...defaultStatuses);
-    }
-  }
+        function applyTranslations() {
+            const t = translations[currentLang] || translations.en;
+            document.getElementById('hero-title').innerText = t.hero;
+            document.getElementById('about-title').innerText = t.about || "About SpeedyDelivery";
+            document.getElementById('services-title').innerText = t.services || "Our Services";
+            document.getElementById('track-title').innerText = t.trackyour || "Track Your Delivery";
+        }
 
-  saveData();
+        /* Tracking Data */
+        const trackingData = {
+            "ABC123": {
+                basePrice: 25,
+                currency: "USD",
+                history: [
+                    { status: "Package Created", time: "Jan 2, 2026 - 10:00 AM", fa: "fa-box" },
+                    { status: "Picked Up", time: "Jan 2, 2026 - 11:15 AM", fa: "fa-hand-holding-box" },
+                    { status: "In Transit", time: "Jan 3, 2026 - 5:15 PM", fa: "fa-truck" }
+                ]
+            },
+            "XYZ999": {
+                basePrice: 15,
+                currency: "EUR",
+                history: [
+                    { status: "Arrived at Warehouse", time: "Jan 5, 2026 - 4:10 PM", fa: "fa-warehouse" },
+                    { status: "Out for Delivery", time: "Jan 6, 2026 - 8:55 AM", fa: "fa-truck-fast" }
+                ]
+            },
+            "SP77966193": {
+                basePrice: 999,
+                currency: "USD",
+                history: [
+                    { status: "Package Created", time: "Jul 20, 2026 - 9:00 AM", fa: "fa-box" },
+                    { status: "Arrived At Mount Pleasant Mail Center, London, UK", time: "Jul 20, 2026 - 09:28 AM", fa: "fa-building" },
+                    { status: "Picked Up", time: "Jul 20, 2026 - 10:10 AM", fa: "fa-hand-holding-box" },
+                    { status: "In Transit To Next Destination", time: "Jul 20, 2026", fa: "fa-truck" }
+                ]
+            },
+            "SP67964991": {
+                basePrice: 999,
+                currency: "USD",
+                history: [
+                    { status: "Package Created", time: "May 22, 2026 - 9:00 AM", fa: "fa-box" },
+                    { status: "Arrived at B&A Logística, Rio de Janeiro", time: "May 22, 2026 - 10:10 AM", fa: "fa-warehouse" }
+                ]
+            }
+        };
 
-  document.getElementById("trackingId").value = "";
-  document.getElementById("status").value = "";
-  document.getElementById("location").value = "";
-  document.getElementById("time").value = "";
-}
+        async function convertPrice(amount, from, to) {
+            try {
+                const r = await fetch(`https://api.exchangerate.host/convert?from=${from}&to=${to}`);
+                const d = await r.json();
+                return (amount * (d.result || 1)).toFixed(2);
+            } catch {
+                return amount.toFixed(2);
+            }
+        }
 
-function editUpdate(id,index){
-  const update = trackingData[id][index];
-  document.getElementById("trackingId").value = id;
-  document.getElementById("status").value = update.status;
-  document.getElementById("location").value = update.location;
-  document.getElementById("time").value = update.time.slice(0,16);
-  editing = {editId:id, editIndex:index};
-}
+        async function showTracking(id) {
+            const data = trackingData[id];
+            const output = document.getElementById("tracking-result");
 
-function deleteUpdate(id,index){
-  trackingData[id].splice(index,1);
-  if(trackingData[id].length === 0) delete trackingData[id];
-  saveData();
-}
+            if (!data) {
+                output.innerHTML = `<p class="text-red-500 text-center text-lg py-12">❌ Tracking ID not found. Please check and try again.</p>`;
+                return;
+            }
 
-function clearAll(){
-  if(confirm("Are you sure you want to clear ALL data?")){
-    trackingData = {};
-    saveData();
-  }
-}
+            const region = { currency: "USD" };
+            const converted = await convertPrice(data.basePrice, data.currency, region.currency);
 
-function renderHistory(){
-  const container = document.getElementById("trackingHistory");
-  container.innerHTML = "";
-  Object.keys(trackingData).forEach(id=>{
-    const card = document.createElement("div");
-    card.className = "tracking-card";
-    const header = document.createElement("h3");
-    header.textContent = `Tracking ID: ${id}`;
-    card.appendChild(header);
+            let html = `
+                <div class="bg-white rounded-3xl shadow-lg p-8 md:p-12">
+                    <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-10">
+                        <div>
+                            <h3 class="text-2xl font-semibold">Tracking #${id}</h3>
+                            <p class="text-emerald-600 font-medium mt-1">In Transit • Expected tomorrow</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">Total Cost</p>
+                            <p class="text-3xl font-bold text-orange-600">${region.currency} ${converted}</p>
+                        </div>
+                    </div>
+                    <div class="space-y-10">
+            `;
 
-    trackingData[id].forEach((update,i)=>{
-      const div = document.createElement("div");
-      div.className = "status";
-      // highlight latest
-      if(i===0) div.classList.add("latest");
-      div.innerHTML = `${update.status}${update.time?` <span class="time">(${new Date(update.time).toLocaleString()})</span>`:""}`;
-      if(update.location) div.innerHTML += `<div class="location">📌 ${update.location}</div>`;
+            data.history.forEach((step, index) => {
+                html += `
+                    <div class="flex gap-6 items-start">
+                        <div class="w-11 h-11 flex-shrink-0 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center text-xl border border-orange-200">
+                            <i class="fa-solid ${step.fa}"></i>
+                        </div>
+                        <div class="flex-1 pt-2">
+                            <div class="flex justify-between items-start">
+                                <p class="font-semibold text-lg">${step.status}</p>
+                                <span class="text-sm text-gray-500 whitespace-nowrap">${step.time}</span>
+                            </div>
+                            ${index < data.history.length - 1 ? `<div class="h-12 w-0.5 bg-gradient-to-b from-orange-200 to-transparent ml-5 mt-3"></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
 
-      const editBtn = document.createElement("button");
-      editBtn.textContent = "Edit";
-      editBtn.className = "edit-btn";
-      editBtn.onclick = ()=>editUpdate(id,i);
-      const delBtn = document.createElement("button");
-      delBtn.textContent = "Delete";
-      delBtn.className = "delete-btn";
-      delBtn.onclick = ()=>deleteUpdate(id,i);
+            html += `</div></div>`;
+            output.innerHTML = html;
+        }
 
-      div.appendChild(editBtn);
-      div.appendChild(delBtn);
-      card.appendChild(div);
-    });
+        function trackDelivery(e) {
+            e.preventDefault();
+            const id = document.getElementById("tracking-id").value.trim().toUpperCase();
+            showTracking(id);
+        }
 
-    container.appendChild(card);
-  });
-}
+        function submitContact(e) {
+            e.preventDefault();
+            alert("✅ Thank you for your message! Our team will get back to you shortly.");
+            e.target.reset();
+        }
 
-renderHistory();
-</script>
-
+        /* Initialize */
+        window.onload = () => {
+            applyTranslations();
+            setTimeout(() => {
+                document.getElementById('tracking-id').focus();
+            }, 800);
+        };
+    </script>
 </body>
 </html>
