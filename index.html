@@ -27,7 +27,7 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   }
   footer { background-color: #222; color: #aaa; text-align: center; padding: 20px; }
-  #tracking-section { background-color: #f9f9f9; padding: 40px 20px; }
+  #tracking-section { background-color: #f9f9f9; padding: 40px 20px; text-align: center; }
   form { margin-top: 20px; }
   input { padding: 10px; width: 250px; border: 1px solid #ccc; border-radius: 5px; }
   button {
@@ -75,7 +75,7 @@
 <section id="tracking-section">
   <h2 id="track-title">Track Your Delivery</h2>
   <form onsubmit="trackDelivery(event)">
-    <input type="text" id="tracking-id" placeholder="Enter tracking number..." required>
+    <input type="text" id="tracking-id" placeholder="Enter tracking number..." autocomplete="off" required>
     <button type="submit" id="track-button">Track</button>
   </form>
   <div id="tracking-result"></div>
@@ -86,100 +86,49 @@
 </footer>
 
 <script>
-/* ------------------------------
- MULTILINGUAL DICTIONARY
------------------------------- */
 const translations = {
   en: {
-    home: "Home",
-    services: "Services",
-    track: "Track",
-    contact: "Contact",
-    hero: "Fast, Reliable & On-Time Delivery",
-    why: "Why Choose Us?",
-    fast: "Fast Delivery",
-    fasttext: "We deliver within hours, not days.",
-    realtime: "Real-time Tracking",
-    realtimetext: "Track your package live with our mobile app.",
-    support: "24/7 Support",
-    supporttext: "We're here for you anytime, anywhere.",
-    trackyour: "Track Your Delivery",
-    trackbtn: "Track",
-    enterid: "Enter tracking number..."
+    home: "Home", services: "Services", track: "Track", contact: "Contact",
+    hero: "Fast, Reliable & On-Time Delivery", why: "Why Choose Us?",
+    fast: "Fast Delivery", fasttext: "We deliver within hours, not days.",
+    realtime: "Real-time Tracking", realtimetext: "Track your package live with our mobile app.",
+    support: "24/7 Support", supporttext: "We're here for you anytime, anywhere.",
+    trackyour: "Track Your Delivery", trackbtn: "Track", enterid: "Enter tracking number..."
   },
   de: {
-    home: "Startseite",
-    services: "Dienstleistungen",
-    track: "Verfolgen",
-    contact: "Kontakt",
-    hero: "Schnelle, zuverlässige und pünktliche Lieferung",
-    why: "Warum uns wählen?",
-    fast: "Schnelle Lieferung",
-    fasttext: "Wir liefern innerhalb von Stunden, nicht Tagen.",
-    realtime: "Echtzeit-Tracking",
-    realtimetext: "Verfolgen Sie Ihr Paket live.",
-    support: "24/7 Unterstützung",
-    supporttext: "Wir sind immer für Sie da.",
-    trackyour: "Lieferung verfolgen",
-    trackbtn: "Verfolgen",
-    enterid: "Sendungsnummer eingeben..."
+    home: "Startseite", services: "Dienstleistungen", track: "Verfolgen", contact: "Kontakt",
+    hero: "Schnelle, zuverlässige und pünktliche Lieferung", why: "Warum uns wählen?",
+    fast: "Schnelle Lieferung", fasttext: "Wir liefern innerhalb von Stunden, nicht Tagen.",
+    realtime: "Echtzeit-Tracking", realtimetext: "Verfolgen Sie Ihr Paket live.",
+    support: "24/7 Unterstützung", supporttext: "Wir sind immer für Sie da.",
+    trackyour: "Lieferung verfolgen", trackbtn: "Verfolgen", enterid: "Sendungsnummer eingeben..."
   },
   es: {
-    home: "Inicio",
-    services: "Servicios",
-    track: "Rastrear",
-    contact: "Contacto",
-    hero: "Entrega rápida, confiable y puntual",
-    why: "¿Por qué elegirnos?",
-    fast: "Entrega rápida",
-    fasttext: "Entregamos en horas, no días.",
-    realtime: "Seguimiento en tiempo real",
-    realtimetext: "Rastrea tu paquete en vivo.",
-    support: "Soporte 24/7",
-    supporttext: "Siempre estamos aquí para ti.",
-    trackyour: "Rastrear Envío",
-    trackbtn: "Rastrear",
-    enterid: "Ingresa número de rastreo..."
+    home: "Inicio", services: "Servicios", track: "Rastrear", contact: "Contacto",
+    hero: "Entrega rápida, confiable y puntual", why: "¿Por qué elegirnos?",
+    fast: "Entrega rápida", fasttext: "Entregamos en horas, no días.",
+    realtime: "Seguimiento en tiempo real", realtimetext: "Rastrea tu paquete en vivo.",
+    support: "Soporte 24/7", supporttext: "Siempre estamos aquí para ti.",
+    trackyour: "Rastrear Envío", trackbtn: "Rastrear", enterid: "Ingresa número de rastreo..."
   },
   pl: {
-    home: "Strona główna",
-    services: "Usługi",
-    track: "Śledzenie",
-    contact: "Kontakt",
-    hero: "Szybka, niezawodna i terminowa dostawa",
-    why: "Dlaczego my?",
-    fast: "Szybka dostawa",
-    fasttext: "Dostarczamy w ciągu godzin, nie dni.",
-    realtime: "Śledzenie na żywo",
-    realtimetext: "Śledź swoją paczkę w czasie rzeczywistym.",
-    support: "Wsparcie 24/7",
-    supporttext: "Jesteśmy tutaj dla Ciebie cały czas.",
-    trackyour: "Śledź przesyłkę",
-    trackbtn: "Śledź",
-    enterid: "Wpisz numer przesyłki..."
+    home: "Strona główna", services: "Usługi", track: "Śledzenie", contact: "Kontakt",
+    hero: "Szybka, niezawodna i terminowa dostawa", why: "Dlaczego my?",
+    fast: "Szybka dostawa", fasttext: "Dostarczamy w ciągu godzin, nie dni.",
+    realtime: "Śledzenie na żywo", realtimetext: "Śledź swoją paczkę w czasie rzeczywistym.",
+    support: "Wsparcie 24/7", supporttext: "Jesteśmy tutaj dla Ciebie cały czas.",
+    trackyour: "Śledź przesyłkę", trackbtn: "Śledź", enterid: "Wpisz numer przesyłki..."
   },
   hi: {
-    home: "होम",
-    services: "सेवाएँ",
-    track: "ट्रैक करें",
-    contact: "संपर्क",
-    hero: "तेज़, विश्वसनीय और समय पर डिलीवरी",
-    why: "हमें क्यों चुनें?",
-    fast: "तेज़ डिलीवरी",
-    fasttext: "हम घंटे में डिलीवर करते हैं, दिनों में नहीं।",
-    realtime: "रीयल-टाइम ट्रैकिंग",
-    realtimetext: "अपने पैकेज को लाइव ट्रैक करें।",
-    support: "24/7 सहायता",
-    supporttext: "हम हमेशा आपके लिए यहाँ हैं।",
-    trackyour: "अपनी डिलीवरी ट्रैक करें",
-    trackbtn: "ट्रैक करें",
-    enterid: "ट्रैकिंग नंबर दर्ज करें..."
+    home: "होम", services: "सेवाएँ", track: "ट्रैक करें", contact: "संपर्क",
+    hero: "तेज़, विश्वसनीय और समय पर डिलीवरी", why: "हमें क्यों चुनें?",
+    fast: "तेज़ डिलीवरी", fasttext: "हम घंटे में डिलीवर करते हैं, दिनों में नहीं।",
+    realtime: "रीयल-टाइम ट्रैकिंग", realtimetext: "अपने पैकेज को लाइव ट्रैक करें।",
+    support: "24/7 सहायता", supporttext: "हम हमेशा आपके लिए यहाँ हैं।",
+    trackyour: "अपनी डिलीवरी ट्रैक करें", trackbtn: "ट्रैक करें", enterid: "ट्रैकिंग नंबर दर्ज करें..."
   }
 };
 
-/* ------------------------------
- AUTO DETECT IP REGION
------------------------------- */
 async function detectRegion() {
   try {
     const res = await fetch("https://ipapi.co/json/");
@@ -189,12 +138,8 @@ async function detectRegion() {
   }
 }
 
-/* ------------------------------
- APPLY LANGUAGE TRANSLATIONS
------------------------------- */
 async function applyLanguage() {
   const region = await detectRegion();
-
   const langMap = { DE: "de", ES: "es", MX: "es", PL: "pl", IN: "hi" };
   const userLang = langMap[region.country] || "en";
   const t = translations[userLang];
@@ -203,28 +148,20 @@ async function applyLanguage() {
   document.getElementById("nav-services").innerText = t.services;
   document.getElementById("nav-track").innerText = t.track;
   document.getElementById("nav-contact").innerText = t.contact;
-
   document.getElementById("hero-title").innerText = t.hero;
   document.getElementById("why-title").innerText = t.why;
-
   document.getElementById("card1-title").innerText = t.fast;
   document.getElementById("card1-text").innerText = t.fasttext;
-
   document.getElementById("card2-title").innerText = t.realtime;
   document.getElementById("card2-text").innerText = t.realtimetext;
-
   document.getElementById("card3-title").innerText = t.support;
   document.getElementById("card3-text").innerText = t.supporttext;
-
   document.getElementById("track-title").innerText = t.trackyour;
   document.getElementById("track-button").innerText = t.trackbtn;
   document.getElementById("tracking-id").placeholder = t.enterid;
 }
 applyLanguage();
 
-/* ------------------------------
- TRACKING DATA (EDIT HERE)
------------------------------- */
 const trackingData = {
   "ABC123": {
     basePrice: 25,
@@ -248,8 +185,8 @@ const trackingData = {
     currency: "USD",
     history: [
       { status: "Package Created", time: "Sep 24, 2026 - 09:38 AM" },
-      { status:  },
-      { status: "Picked Up At Mail Center, Frankfurt, Germany", time: "Sep 25, 2026 - 09:52 AM" },
+      { status: "In Transit", time: "Sep 24, 2026 - 02:00 PM" },
+      { status: "Picked Up At Mail Center, Frankfurt, Germany", time: "Sep 25, 2026 - 09:52 AM" }
     ]
   },
   "SP77966193": {
@@ -268,29 +205,26 @@ const trackingData = {
     currency: "USD",
     history: [
       { status: "Package Created", time: "May 22, 2026 - 9:00 AM" },
-      { status: "Arrived at B&A Logística Internacional Warehouse,  Rio de Janeiro, Brazil", time: "May 22, 2026 - 10:10 AM" },
-      { status: "Picked Up At B&A Logística Internacional Warehouse,  Rio de Janeiro, Brazil", time: "May 22, 2026 - 11:15 AM" },
-      { status: "In Transit To Next Destination....",  time: "May 22, 2026 - 01:15 PM" }
+      { status: "Arrived at B&A Logística Internacional Warehouse, Rio de Janeiro, Brazil", time: "May 22, 2026 - 10:10 AM" },
+      { status: "Picked Up At B&A Logística Internacional Warehouse, Rio de Janeiro, Brazil", time: "May 22, 2026 - 11:15 AM" },
+      { status: "In Transit To Next Destination....", time: "May 22, 2026 - 01:15 PM" }
     ]
   }
 };
 
-/* ------------------------------
- CURRENCY CONVERSION API
------------------------------- */
 async function convertPrice(amount, from, to) {
   try {
-    const r = await fetch(`https://api.exchangerate.host/convert?from=${from}&to=${to}`);
+    const r = await fetch(`https://open.er-api.com/v6/latest/${from}`);
     const d = await r.json();
-    return (amount * d.result).toFixed(2);
+    if (d && d.rates && d.rates[to]) {
+      return (amount * d.rates[to]).toFixed(2);
+    }
+    return amount;
   } catch {
     return amount;
   }
 }
 
-/* ------------------------------
- SHOW TRACKING RESULT
------------------------------- */
 async function showTracking(id) {
   const data = trackingData[id];
   const output = document.getElementById("tracking-result");
@@ -299,6 +233,8 @@ async function showTracking(id) {
     output.innerHTML = "<p style='color:red'>❌ Tracking ID not found.</p>";
     return;
   }
+
+  output.innerHTML = "<p>Loading details...</p>";
 
   const region = await detectRegion();
   const converted = await convertPrice(data.basePrice, data.currency, region.currency);
